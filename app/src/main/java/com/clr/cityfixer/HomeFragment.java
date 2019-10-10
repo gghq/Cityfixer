@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,30 +25,31 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-import static com.clr.cityfixer.utils.Constants.DEFAULT_ZOOM;
-import static com.clr.cityfixer.utils.Constants.ERROR_DIALOG_REQUEST;
-import static com.clr.cityfixer.utils.Constants.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION;
-import static com.clr.cityfixer.utils.Constants.PERMISSIONS_REQUEST_ENABLE_GPS;
+import static com.clr.cityfixer.utils.Constants.*;
 
-public class HomeFragment extends Fragment implements OnMapReadyCallback {
+public class HomeFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
 
     GoogleMap map;
     private boolean locationPermissionGranted;
+    private boolean cameraIsOnUser;
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home,container,false);
-
+        this.cameraIsOnUser = false;
 
 
         return v;
@@ -76,15 +78,30 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
 
         map = googleMap;
+        map.setOnMapLongClickListener(this);
 
 //        if(checkMapServices()) {
-//            if(locationPermissionGranted) {
-//                initialWorkWithMap();
-//            }
+            if(locationPermissionGranted) {
+                initialWorkWithMap();
+            }
 //            else {
 //                getLocationPermission();
 //            }
 //        }
+        recursiveCameraCheck();
+    }
+
+    private void recursiveCameraCheck() {
+        (new Handler()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(!cameraIsOnUser) {
+                    cameraIsOnUser = true;
+                    getDeviceLocation();
+                    recursiveCameraCheck();
+                }
+            }
+        }, 2200);
     }
 
     @Override
@@ -94,7 +111,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         if(checkMapServices()) {
             if(locationPermissionGranted) {
                 initialWorkWithMap();
-                getDeviceLocation();
             }
             else {
                 getLocationPermission();
@@ -102,12 +118,34 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+    @Override
+    public void onMapLongClick(LatLng point) {
+
+        map.addMarker(new MarkerOptions().position(point).title(
+                point.toString()));
+
+        Toast.makeText(getActivity().getApplicationContext(),
+                "New marker added@" + point.toString(), Toast.LENGTH_LONG)
+                .show();
+    }
+    @Override
+    public void onMapClick(LatLng latLng) {
+
+        map.addMarker(new MarkerOptions().position(latLng).title(
+                latLng.toString()));
+
+        Toast.makeText(getActivity().getApplicationContext(),
+                "New marker added@" + latLng.toString(), Toast.LENGTH_LONG)
+                .show();
+    }
+
     private void initialWorkWithMap() {
         map.setMyLocationEnabled(true);
         map.setBuildingsEnabled(true);
+        getDeviceLocation();
     }
 
-    private void getDeviceLocation() {
+    private boolean getDeviceLocation() {
         /*
          * Get the best and most recent location of the device, which may be null in rare
          * cases when a location is not available.
@@ -123,16 +161,17 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                             Location mLastKnownLocation = (Location)task.getResult();
                             if(mLastKnownLocation == null) {
                                 Log.d("MainActivity", "Variable of last location is null");
+                                cameraIsOnUser = false;
+                                moveCamera();
+                                map.getUiSettings().setMyLocationButtonEnabled(false);
                                 return;
                             }
-                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                                    new LatLng(mLastKnownLocation.getLatitude(),
-                                            mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
+                            moveCamera(mLastKnownLocation);
+                            cameraIsOnUser = true;
                         } else {
                             Log.d("MainActivity", "Current location is null. Using defaults.");
                             Log.e("MainActivity", "Exception: %s", task.getException());
-                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(0, 0), DEFAULT_ZOOM));
-                            map.getUiSettings().setMyLocationButtonEnabled(false);
+                            moveCamera();
                         }
                     }
                 });
@@ -140,6 +179,21 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         } catch(SecurityException e)  {
             Log.e("MainActivity: %s", e.getMessage());
         }
+
+        return true;
+    }
+
+    private void moveCamera(LatLng position, float zoom) {
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, zoom));
+    }
+    private void moveCamera(LatLng position) {
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_ZOOM));
+    }
+    private void moveCamera(Location position) {
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(position.getLatitude(), position.getLongitude()), DEFAULT_ZOOM));
+    }
+    private void moveCamera() {
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_POSITION, DEFAULT_ZOOM));
     }
 
 
@@ -256,4 +310,5 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             }
         }
     }
+
 }
