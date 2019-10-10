@@ -69,13 +69,11 @@ public class MainActivity extends AppCompatActivity {
                                         if(homeFragment == null)
                                             homeFragment = new Fragment();
                                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
-//                                        if(!isNetworkAvailable())
-//                                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, errorListFragment).commit();
                                     }
                                 });
                             }
                         });
-//                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, errorListFragment).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, errorListFragment).commit();
                         break;
                     case R.id.nav_help:
                         if(helpFragment == null)
@@ -91,11 +89,9 @@ public class MainActivity extends AppCompatActivity {
                                 if(listFragment == null)
                                     listFragment = new ListFragment();
                                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, listFragment).commit();
-//                                if(!isNetworkAvailable())
-//                                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, errorListFragment).commit();
                             }
                         });
-//                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, errorListFragment).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, errorListFragment).commit();
                         break;
                     case R.id.nav_acc:
                         db.DownloadUsers(new DB.FirebaseCallbackUsers() {
@@ -107,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
                                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, accFragment).commit();
                             }
                         });
-//                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, errorListFragment).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, errorListFragment).commit();
                         break;
                 }
                 return true;
