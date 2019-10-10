@@ -40,7 +40,10 @@ public class MainActivity extends AppCompatActivity {
                             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
                             break;
                         case R.id.nav_help:
-                          break;
+                            if(helpFragment  == null)
+                                helpFragment = new AccountFragment();
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, helpFragment).commit();
+                            break;
                         case R.id.nav_list:
                             //selectedFragment = new ListFragment();
                             break;
