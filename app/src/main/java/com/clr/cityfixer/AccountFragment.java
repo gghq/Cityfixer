@@ -102,7 +102,6 @@ public class AccountFragment extends Fragment {
             }
         });
            preferences = getContext().getSharedPreferences("MODEL_PREFERENCES",Context.MODE_PRIVATE);
-
             if(preferences.getString("currentUser",null)!= null)
             {
                 currentUser = (preferences.getString("currentUser",null));
