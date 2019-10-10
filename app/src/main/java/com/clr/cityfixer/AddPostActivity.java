@@ -43,7 +43,7 @@ public class AddPostActivity extends AppCompatActivity {
     EditText editTextTitle, editTextDescription;
     Spinner spinnerCategories;
     Intent takenImage;
-    public DB db;
+    public   DB db;
     Dexter dexter;
 
     @Override
