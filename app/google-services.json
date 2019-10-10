@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1091338331361",
+    "firebase_url": "https://cityfixer-191fe.firebaseio.com",
+    "project_id": "cityfixer-191fe",
+    "storage_bucket": "cityfixer-191fe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1091338331361:android:00fa8e5140ed02f54fc3a0",
+        "android_client_info": {
+          "package_name": "com.clr.cityfixer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1091338331361-n7inqvi37cjviu6spcubjd7tfmqibjlb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfO-njOw6SlrqmkqJ7QIxjt0mz_rqgwmk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1091338331361-n7inqvi37cjviu6spcubjd7tfmqibjlb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
