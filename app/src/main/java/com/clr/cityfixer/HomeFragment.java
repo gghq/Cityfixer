@@ -48,6 +48,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
     FloatingActionButton btnAddPost;
 
+    private boolean addWasAsked;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -68,6 +70,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         btnAddPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intent = new Intent(getActivity(), AddPostActivity.class);
                 updateLastLocation();
                 Toast.makeText(getActivity().getApplicationContext(),
@@ -88,6 +91,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         this.fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         this.lastKnownLocation = DEFAULT_POSITION;
+
+        this.addWasAsked = false;
 
         if(locationPermissionGranted) {
             initialWorkWithMap();
