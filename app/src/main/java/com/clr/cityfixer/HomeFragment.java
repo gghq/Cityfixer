@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -35,6 +36,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import static com.clr.cityfixer.utils.Constants.*;
 
@@ -44,6 +46,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     private boolean locationPermissionGranted;
     private boolean cameraIsOnUser;
 
+    FloatingActionButton btnAddPost;
 
     @Nullable
     @Override
@@ -51,7 +54,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         View v = inflater.inflate(R.layout.fragment_home,container,false);
         this.cameraIsOnUser = false;
 
-
+        btnAddPost = (FloatingActionButton)v.findViewById(R.id.btnAddPost);
         return v;
     }
 
@@ -61,6 +64,14 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         SupportMapFragment mapFragment = (SupportMapFragment)getChildFragmentManager().
                 findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        btnAddPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), AddPostActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
 //    @Override
@@ -126,16 +137,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
         Toast.makeText(getActivity().getApplicationContext(),
                 "New marker added@" + point.toString(), Toast.LENGTH_LONG)
-                .show();
-    }
-    @Override
-    public void onMapClick(LatLng latLng) {
-
-        map.addMarker(new MarkerOptions().position(latLng).title(
-                latLng.toString()));
-
-        Toast.makeText(getActivity().getApplicationContext(),
-                "New marker added@" + latLng.toString(), Toast.LENGTH_LONG)
                 .show();
     }
 

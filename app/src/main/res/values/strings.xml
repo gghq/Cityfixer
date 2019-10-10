@@ -5,4 +5,9 @@
     <string name="help">Help</string>
     <string name="list">List</string>
     <string name="acc">Account</string>
+
+    <array name="categories">
+        <item>Graffiti</item>
+        <item>Junk</item>
+    </array>
 </resources>
