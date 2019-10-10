@@ -77,31 +77,15 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         });
     }
 
-//    @Override
-//    public void onMapReady(GoogleMap googleMap) {
-//        map = googleMap;
-//        LatLng pp = new LatLng(11,34);
-//        MarkerOptions options = new MarkerOptions();
-//        options.position(pp).title("qwe");
-//        map.addMarker(options);
-//        map.moveCamera(CameraUpdateFactory.newLatLng(pp));
-//    }
-
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
         map = googleMap;
         map.setOnMapLongClickListener(this);
 
-//        if(checkMapServices()) {
-            if(locationPermissionGranted) {
-                initialWorkWithMap();
-            }
-//            else {
-//                getLocationPermission();
-//            }
-//        }
+        if(locationPermissionGranted) {
+            initialWorkWithMap();
+        }
         recursiveCameraCheck();
     }
 
@@ -150,10 +134,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     }
 
     private boolean getDeviceLocation() {
-        /*
-         * Get the best and most recent location of the device, which may be null in rare
-         * cases when a location is not available.
-         */
         try {
             if (locationPermissionGranted) {
                 Task locationResult = new FusedLocationProviderClient(getActivity()).getLastLocation();
