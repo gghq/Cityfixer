@@ -59,11 +59,12 @@ public class MainActivity extends AppCompatActivity {
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
                         break;
                     case R.id.nav_help:
-                      break;
+                        if(helpFragment  == null)
+                            helpFragment = new AccountFragment();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, helpFragment).commit();
+                        break;
                     case R.id.nav_list:
-                        if(accFragment  == null)
-                            listFragment = new AccountFragment();
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, listFragment).commit();
+                        //selectedFragment = new ListFragment();
                         break;
                     case R.id.nav_acc:
                         if(accFragment  == null)
@@ -72,10 +73,6 @@ public class MainActivity extends AppCompatActivity {
                         break;
                 }
 
-          //      assert selectedFragment != null;
-         //       getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-           //             selectedFragment).commit();
-           //             selectedFragment).commit();
                 return true;
             }
         };

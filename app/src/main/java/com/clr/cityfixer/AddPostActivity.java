@@ -72,7 +72,7 @@ public class AddPostActivity extends AppCompatActivity {
                 String user = "user";
                 String title = editTextTitle.getText().toString().trim();
                 String description = editTextDescription.getText().toString().trim();
-                LatLng location = new LatLng(56f, 34f);
+                Location location = new Location("13", "23");
                 String date = Calendar.getInstance().getTime().toString();
                 String category = spinnerCategories.getSelectedItem().toString();
                 boolean approved = false;
