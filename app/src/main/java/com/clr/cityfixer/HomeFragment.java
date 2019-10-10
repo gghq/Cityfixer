@@ -28,6 +28,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -35,6 +36,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -45,7 +47,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     GoogleMap map;
     private boolean locationPermissionGranted;
     private boolean cameraIsOnUser;
-    private LatLng location;
+    private LatLng lastKnownLocation;
+    private FusedLocationProviderClient fusedLocationClient;
 
     FloatingActionButton btnAddPost;
 
@@ -70,8 +73,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), AddPostActivity.class);
-                intent.putExtra("latitude", location.latitude);
-                intent.putExtra("longitude", location.longitude);
+                getLastLocation();
+                Toast.makeText(getActivity().getApplicationContext(),
+                        "New marker added@" + lastKnownLocation.toString(), Toast.LENGTH_LONG)
+                        .show();
+                intent.putExtra("latitude", lastKnownLocation.latitude);
+                intent.putExtra("longitude", lastKnownLocation.longitude);
                 startActivity(intent);
             }
         });
@@ -82,6 +89,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
         map = googleMap;
         map.setOnMapLongClickListener(this);
+        this.fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+
+        this.lastKnownLocation = DEFAULT_POSITION;
 
         if(locationPermissionGranted) {
             initialWorkWithMap();
@@ -95,7 +105,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             public void run() {
                 if(!cameraIsOnUser) {
                     cameraIsOnUser = true;
-                    getDeviceLocation();
+                    moveToDeviceLocation();
                     recursiveCameraCheck();
                 }
             }
@@ -130,10 +140,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     private void initialWorkWithMap() {
         map.setMyLocationEnabled(true);
         map.setBuildingsEnabled(true);
-        getDeviceLocation();
+        moveToDeviceLocation();
     }
 
-    private boolean getDeviceLocation() {
+    private void moveToDeviceLocation() {
         try {
             if (locationPermissionGranted) {
                 Task locationResult = new FusedLocationProviderClient(getActivity()).getLastLocation();
@@ -150,6 +160,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                                 map.getUiSettings().setMyLocationButtonEnabled(false);
                                 return;
                             }
+                            lastKnownLocation = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
                             moveCamera(mLastKnownLocation);
                             cameraIsOnUser = true;
                         } else {
@@ -163,8 +174,22 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         } catch(SecurityException e)  {
             Log.e("MainActivity: %s", e.getMessage());
         }
+    }
 
-        return true;
+    private void getLastLocation() {
+        fusedLocationClient.getLastLocation()
+            .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    // Got last known location. In some rare situations this can be null.
+                    if (location != null) {
+                        // Logic to handle location object
+                        lastKnownLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                    }
+                }
+            }
+        );
+
     }
 
     private void moveCamera(LatLng position, float zoom) {
