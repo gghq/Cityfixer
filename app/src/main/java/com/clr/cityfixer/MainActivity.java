@@ -46,37 +46,37 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
-            new BottomNavigationView.OnNavigationItemSelectedListener() {
-                @Override
-                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                    androidx.fragment.app.Fragment selectedFragment = null;
+        new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                androidx.fragment.app.Fragment selectedFragment = null;
 
-                    switch(menuItem.getItemId())
-                    {
-                        case R.id.nav_home:
-                            if(homeFragment  == null)
-                                homeFragment = new HomeFragment();
-                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
-                            break;
-                        case R.id.nav_help:
-                            if(helpFragment  == null)
-                                helpFragment = new AccountFragment();
-                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, helpFragment).commit();
-                            break;
-                        case R.id.nav_list:
-                            if(accFragment  == null)
-                                listFragment = new ListFragment();
-                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, listFragment).commit();
-                            break;
-                        case R.id.nav_acc:
-                            if(accFragment  == null)
-                                accFragment = new AccountFragment();
-                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, accFragment).commit();
-                            break;
-                    }
-
-                    return true;
+                switch(menuItem.getItemId())
+                {
+                    case R.id.nav_home:
+                        if(homeFragment  == null)
+                            homeFragment = new HomeFragment();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
+                        break;
+                    case R.id.nav_help:
+                        if(helpFragment  == null)
+                            helpFragment = new AccountFragment();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, helpFragment).commit();
+                        break;
+                    case R.id.nav_list:
+                        if(listFragment  == null)
+                            listFragment = new ListFragment();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, listFragment).commit();
+                        break;
+                    case R.id.nav_acc:
+                        if(accFragment  == null)
+                            accFragment = new AccountFragment();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, accFragment).commit();
+                        break;
                 }
-            };
+
+                return true;
+            }
+        };
 }
 
