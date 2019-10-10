@@ -7,7 +7,7 @@ public class Post {
     private String User;
     private String Title;
     private String Description;
-    private Location Location;
+    private PostLocation Location;
     private String Image;
     private String Date;
     private String Category;
@@ -16,7 +16,7 @@ public class Post {
     public Post() {
     }
 
-    public Post(String id, String user, String title, String description, Location location, String image, String date, String category, boolean approved) {
+    public Post(String id, String user, String title, String description, PostLocation location, String image, String date, String category, boolean approved) {
         Id = id;
         User = user;
         Title = title;
@@ -28,7 +28,7 @@ public class Post {
         Approved = approved;
     }
 
-    public Post(String user, String title, String description, Location location, String date, String category, boolean approved) {
+    public Post(String user, String title, String description, PostLocation location, String date, String category, boolean approved) {
         User = user;
         Title = title;
         Description = description;
@@ -38,11 +38,11 @@ public class Post {
         Approved = approved;
     }
 
-    public Location getLocation() {
+    public PostLocation getLocation() {
         return Location;
     }
 
-    public void setLocation(Location location) {
+    public void setLocation(PostLocation location) {
         Location = location;
     }
 

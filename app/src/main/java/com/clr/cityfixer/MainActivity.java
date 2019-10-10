@@ -64,7 +64,9 @@ public class MainActivity extends AppCompatActivity {
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, helpFragment).commit();
                         break;
                     case R.id.nav_list:
-                        //selectedFragment = new ListFragment();
+                        if(accFragment  == null)
+                            listFragment = new ListFragment();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, listFragment).commit();
                         break;
                     case R.id.nav_acc:
                         if(accFragment  == null)

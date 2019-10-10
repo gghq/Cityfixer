@@ -45,6 +45,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     GoogleMap map;
     private boolean locationPermissionGranted;
     private boolean cameraIsOnUser;
+    private LatLng location;
 
     FloatingActionButton btnAddPost;
 
@@ -69,6 +70,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), AddPostActivity.class);
+                intent.putExtra("latitude", location.latitude);
+                intent.putExtra("longitude", location.longitude);
                 startActivity(intent);
             }
         });

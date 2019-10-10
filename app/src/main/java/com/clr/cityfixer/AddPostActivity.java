@@ -69,10 +69,12 @@ public class AddPostActivity extends AppCompatActivity {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String latitude = getIntent().getStringExtra("latitude");
+                String longitude = getIntent().getStringExtra("longitude");
                 String user = "user";
                 String title = editTextTitle.getText().toString().trim();
                 String description = editTextDescription.getText().toString().trim();
-                Location location = new Location("13", "23");
+                PostLocation location = new PostLocation(latitude, longitude);
                 String date = Calendar.getInstance().getTime().toString();
                 String category = spinnerCategories.getSelectedItem().toString();
                 boolean approved = false;
