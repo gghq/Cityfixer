@@ -12,6 +12,7 @@
         tools:context=".MapsActivity" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnAddPost"
         android:layout_width="105dp"
         android:layout_height="76dp"
         android:layout_alignParentEnd="true"
