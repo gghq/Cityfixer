@@ -30,8 +30,35 @@ import java.util.List;
 
 public class DB {
     private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("posts");
+    private DatabaseReference databaseReferenceU = FirebaseDatabase.getInstance().getReference("users");
     private DatabaseReference databaseReferenceA = FirebaseDatabase.getInstance().getReference("admins");
     private StorageReference storageReference = FirebaseStorage.getInstance().getReference("images");
+
+    public void SaveUser(User user){
+        String id = databaseReferenceU.child("users").push().getKey();
+        databaseReferenceU.child(id).setValue(user);
+    }
+
+    public void DownloadUsers(final FirebaseCallbackUsers firebaseCallback){
+        final ArrayList<User> users = new ArrayList<User>();
+        databaseReferenceU.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue() == null){
+                    return;
+                }
+                for(DataSnapshot dS : dataSnapshot.getChildren()){
+                    User user = dS.getValue(User.class);
+                    users.add(user);
+                }
+                firebaseCallback.CallBack(users);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
 
     public void SaveAdmin(String email){
         String id = databaseReferenceA.child("admins").push().getKey();
@@ -204,6 +231,10 @@ public class DB {
 
     public interface FirebaseCallbackAdmins{
         void CallBack(ArrayList<String> admins);
+    }
+
+    public interface FirebaseCallbackUsers{
+        void CallBack(ArrayList<User> users);
     }
 
     private Bitmap ByteArrayToBitmap(byte[] byteArray){
