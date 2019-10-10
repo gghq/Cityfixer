@@ -24,15 +24,4 @@
         app:cb_color="@color/colorPrimaryDark"
         app:cb_pressedRingWidth="4dip" />
 
-    <!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--        android:id="@+id/btnAddPost"-->
-<!--        android:layout_width="105dp"-->
-<!--        android:layout_height="76dp"-->
-<!--        android:layout_alignParentEnd="true"-->
-<!--        android:layout_alignParentBottom="true"-->
-<!--        android:layout_marginEnd="11dp"-->
-<!--        android:layout_marginBottom="19dp"-->
-<!--        app:tint="@color/colorPrimaryDark"-->
-<!--        android:src="@drawable/ic_fab"/>-->
-
 </RelativeLayout>

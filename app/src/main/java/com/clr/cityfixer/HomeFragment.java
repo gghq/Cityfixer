@@ -1,5 +1,6 @@
 package com.clr.cityfixer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,11 +22,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
     GoogleMap map;
+    FloatingActionButton btnAddPost;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home,container,false);
 
+//        btnAddPost = (FloatingActionButton)v.findViewById(R.id.btnAddPost);
         return v;
     }
 
@@ -35,6 +39,15 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         SupportMapFragment mapFragment = (SupportMapFragment)getChildFragmentManager().
                 findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+//        btnAddPost.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(getActivity(), AddPostActivity.class);
+//                intent.putExtra("location", "your location");
+//                startActivity(intent);
+//            }
+//        });
     }
 
     @Override

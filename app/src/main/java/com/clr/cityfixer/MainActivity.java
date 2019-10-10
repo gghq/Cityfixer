@@ -4,10 +4,17 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ListView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,6 +22,9 @@ public class MainActivity extends AppCompatActivity {
     private Fragment accFragment;
     private Fragment listFragment;
     private Fragment helpFragment;
+    DB db;
+    ArrayList<Post> postsList;
+    ArrayList<String> adminsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +35,16 @@ public class MainActivity extends AppCompatActivity {
         bottomNav.setOnNavigationItemSelectedListener(navListener);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
 
+        db = new DB();
+
+        db.DownloadPosts(new DB.FirebaseCallbackPosts() {
+            @Override
+            public void CallBack(ArrayList<Post> postList) {
+                postsList = postList;
+            }
+        });
     }
+
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
@@ -45,7 +64,9 @@ public class MainActivity extends AppCompatActivity {
                             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, helpFragment).commit();
                             break;
                         case R.id.nav_list:
-                            //selectedFragment = new ListFragment();
+                            if(accFragment  == null)
+                                listFragment = new ListFragment();
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, listFragment).commit();
                             break;
                         case R.id.nav_acc:
                             if(accFragment  == null)

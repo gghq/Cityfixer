@@ -5,4 +5,9 @@
     <string name="help">Помічник</string>
     <string name="list">Список</string>
     <string name="acc">Кабінет</string>
+
+    <array name="categories">
+        <item>Graffiti</item>
+        <item>Junk</item>
+    </array>
 </resources>

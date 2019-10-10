@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1091338331361-bt7ac4i1htph2denl339a82makok05e3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.clr.cityfixer",
+            "certificate_hash": "b3e758b4082c42b71aa235742fc30c2f0bbf305a"
+          }
+        },
+        {
           "client_id": "1091338331361-n7inqvi37cjviu6spcubjd7tfmqibjlb.apps.googleusercontent.com",
           "client_type": 3
         }
