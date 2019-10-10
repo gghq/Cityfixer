@@ -25,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
     DB db;
     ArrayList<Post> postsList;
     ArrayList<String> adminsList;
+    ArrayList<User> usersList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,13 +38,6 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
 
         db = new DB();
-
-        db.DownloadPosts(new DB.FirebaseCallbackPosts() {
-            @Override
-            public void CallBack(ArrayList<Post> postList) {
-                postsList = postList;
-            }
-        });
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
@@ -54,21 +49,44 @@ public class MainActivity extends AppCompatActivity {
                 switch(menuItem.getItemId())
                 {
                     case R.id.nav_home:
-                        if(homeFragment  == null)
-                            homeFragment = new HomeFragment();
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
+                        db.DownloadPosts(new DB.FirebaseCallbackPosts() {
+                            @Override
+                            public void CallBack(ArrayList<Post> postList) {
+                                db.DownloadAdmins(new DB.FirebaseCallbackAdmins() {
+                                    @Override
+                                    public void CallBack(ArrayList<String> admins) {
+                                        adminsList = admins;
+                                        if(homeFragment  == null)
+                                            homeFragment = new HomeFragment();
+                                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
+                                    }
+                                });
+                            }
+                        });
                         break;
                     case R.id.nav_help:
                       break;
                     case R.id.nav_list:
-                        if(accFragment  == null)
-                            listFragment = new ListFragment();
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, listFragment).commit();
+                        db.DownloadPosts(new DB.FirebaseCallbackPosts() {
+                            @Override
+                            public void CallBack(ArrayList<Post> postList) {
+                                postsList = postList;
+                                if(accFragment  == null)
+                                    listFragment = new ListFragment();
+                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, listFragment).commit();
+                            }
+                        });
                         break;
                     case R.id.nav_acc:
-                        if(accFragment  == null)
-                            accFragment = new AccountFragment();
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, accFragment).commit();
+                        db.DownloadUsers(new DB.FirebaseCallbackUsers() {
+                            @Override
+                            public void CallBack(ArrayList<User> users) {
+                                usersList = users;
+                                if(accFragment  == null)
+                                    accFragment = new AccountFragment();
+                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, accFragment).commit();
+                            }
+                        });
                         break;
                 }
 
