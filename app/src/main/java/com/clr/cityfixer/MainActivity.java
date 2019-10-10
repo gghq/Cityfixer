@@ -70,8 +70,6 @@ public class MainActivity extends AppCompatActivity {
                                     public void CallBack(ArrayList<String> admins) {
                                         adminsList = admins;
                                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
-                                        if(!isNetworkAvailable())
-                                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, errorListFragment).commit();
                                     }
                                 });
                             }
@@ -88,8 +86,6 @@ public class MainActivity extends AppCompatActivity {
                                 postsList = postList;
 
                                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, listFragment).commit();
-                                if(!isNetworkAvailable())
-                                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, errorListFragment).commit();
                             }
                         });
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, errorListFragment).commit();
