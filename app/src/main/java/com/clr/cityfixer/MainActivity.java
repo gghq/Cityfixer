@@ -4,7 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +25,9 @@ public class MainActivity extends AppCompatActivity {
     private Fragment accFragment;
     private Fragment listFragment;
     private Fragment helpFragment;
+
+    private Fragment errorListFragment;
+
     DB db;
     ArrayList<Post> postsList;
     ArrayList<String> adminsList;
@@ -31,7 +37,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         homeFragment = new HomeFragment();
+        listFragment = new ListFragment();
+        accFragment = new AccountFragment();
+        helpFragment = new HelpFragment();
+
+        errorListFragment = new Fragment();
+
         setContentView(R.layout.activity_main);
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
@@ -44,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                androidx.fragment.app.Fragment selectedFragment = null;
+                final androidx.fragment.app.Fragment selectedFragment = null;
 
                 switch(menuItem.getItemId())
                 {
@@ -56,17 +69,16 @@ public class MainActivity extends AppCompatActivity {
                                     @Override
                                     public void CallBack(ArrayList<String> admins) {
                                         adminsList = admins;
-                                        if(homeFragment  == null)
-                                            homeFragment = new HomeFragment();
                                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
+                                        if(!isNetworkAvailable())
+                                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, errorListFragment).commit();
                                     }
                                 });
                             }
                         });
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, errorListFragment).commit();
                         break;
                     case R.id.nav_help:
-                        if(helpFragment  == null)
-                            helpFragment = new HelpFragment();
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, helpFragment).commit();
                         break;
                     case R.id.nav_list:
@@ -74,30 +86,34 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void CallBack(ArrayList<Post> postList) {
                                 postsList = postList;
-                                if(accFragment  == null)
-                                    listFragment = new ListFragment();
+
                                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, listFragment).commit();
+                                if(!isNetworkAvailable())
+                                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, errorListFragment).commit();
                             }
                         });
-                        if(listFragment  == null)
-                            listFragment = new ListFragment();
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, listFragment).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, errorListFragment).commit();
                         break;
                     case R.id.nav_acc:
                         db.DownloadUsers(new DB.FirebaseCallbackUsers() {
                             @Override
                             public void CallBack(ArrayList<User> users) {
                                 usersList = users;
-                                if(accFragment  == null)
-                                    accFragment = new AccountFragment();
                                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, accFragment).commit();
                             }
                         });
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, errorListFragment).commit();
                         break;
                 }
-
                 return true;
             }
         };
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 }
 
