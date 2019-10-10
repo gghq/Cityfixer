@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.nav_help:
                         if(helpFragment  == null)
-                            helpFragment = new AccountFragment();
+                            helpFragment = new HelpFragment();
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, helpFragment).commit();
                         break;
                     case R.id.nav_list:
@@ -79,6 +79,9 @@ public class MainActivity extends AppCompatActivity {
                                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, listFragment).commit();
                             }
                         });
+                        if(listFragment  == null)
+                            listFragment = new ListFragment();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, listFragment).commit();
                         break;
                     case R.id.nav_acc:
                         db.DownloadUsers(new DB.FirebaseCallbackUsers() {

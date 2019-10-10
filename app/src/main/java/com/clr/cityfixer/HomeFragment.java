@@ -36,6 +36,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import at.markushi.ui.CircleButton;
+
 import static com.clr.cityfixer.utils.Constants.*;
 
 public class HomeFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
@@ -46,7 +48,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     private LatLng lastKnownLocation;
     private FusedLocationProviderClient fusedLocationClient;
 
-    FloatingActionButton btnAddPost;
+    CircleButton btnAddPost;
 
     private boolean addWasAsked;
 
@@ -56,7 +58,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         View v = inflater.inflate(R.layout.fragment_home,container,false);
         this.cameraIsOnUser = false;
 
-        btnAddPost = (FloatingActionButton)v.findViewById(R.id.btnAddPost);
+        btnAddPost = (CircleButton)v.findViewById(R.id.btnAddPost);
         return v;
     }
 

@@ -31,6 +31,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:19.1.0'
     testImplementation 'junit:junit:4.12'
     implementation 'gr.pantrif:easy-android-splash-screen:0.0.1'
+    implementation 'com.github.markushi:circlebutton:1.1'
     implementation 'com.google.firebase:firebase-analytics:17.2.0' // Firebase
     implementation 'com.google.firebase:firebase-auth:19.1.0'
     implementation 'com.google.code.gson:gson:2.3'

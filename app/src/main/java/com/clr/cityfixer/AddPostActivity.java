@@ -61,7 +61,7 @@ public class AddPostActivity extends AppCompatActivity {
         spinnerCategories = (Spinner)findViewById(R.id.spinnerCategories);
 
         db = new DB();
-        dexter.withPermission(Manifest.permission.CAMERA);
+//        dexter.withPermission(Manifest.permission.CAMERA);
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, 0);
