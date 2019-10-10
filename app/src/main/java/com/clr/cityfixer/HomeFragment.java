@@ -44,6 +44,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), AddPostActivity.class);
+                intent.putExtra("location", "your location");
                 startActivity(intent);
             }
         });

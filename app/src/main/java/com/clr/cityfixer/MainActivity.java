@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
                       break;
                     case R.id.nav_list:
                         if(accFragment  == null)
-                            listFragment = new AccountFragment();
+                            listFragment = new ListFragment();
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, listFragment).commit();
                         break;
                     case R.id.nav_acc:

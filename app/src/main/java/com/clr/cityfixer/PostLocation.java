@@ -1,10 +1,14 @@
 package com.clr.cityfixer;
 
-public class Location {
+public class PostLocation {
     private String Latitude;
     private String Longitude;
 
-    public Location(String latitude, String longitude) {
+    PostLocation(){
+
+    }
+
+    public PostLocation(String latitude, String longitude) {
         Latitude = latitude;
         Longitude = longitude;
     }
