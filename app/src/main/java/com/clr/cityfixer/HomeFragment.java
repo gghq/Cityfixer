@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -27,7 +26,6 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -35,9 +33,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import static com.clr.cityfixer.utils.Constants.*;
@@ -73,7 +69,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), AddPostActivity.class);
-                getLastLocation();
+                updateLastLocation();
                 Toast.makeText(getActivity().getApplicationContext(),
                         "New marker added@" + lastKnownLocation.toString(), Toast.LENGTH_LONG)
                         .show();
@@ -109,7 +105,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                     recursiveCameraCheck();
                 }
             }
-        }, 2200);
+        }, 1200);
     }
 
     @Override
@@ -144,39 +140,42 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     }
 
     private void moveToDeviceLocation() {
-        try {
-            if (locationPermissionGranted) {
-                Task locationResult = new FusedLocationProviderClient(getActivity()).getLastLocation();
-                locationResult.addOnCompleteListener(getActivity(), new OnCompleteListener() {
-                    @Override
-                    public void onComplete(@NonNull Task task) {
-                        if (task.isSuccessful()) {
-                            // Set the map's camera position to the current location of the device.
-                            Location mLastKnownLocation = (Location)task.getResult();
-                            if(mLastKnownLocation == null) {
-                                Log.d("MainActivity", "Variable of last location is null");
-                                cameraIsOnUser = false;
-                                moveCamera();
-                                map.getUiSettings().setMyLocationButtonEnabled(false);
-                                return;
-                            }
-                            lastKnownLocation = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
-                            moveCamera(mLastKnownLocation);
-                            cameraIsOnUser = true;
-                        } else {
-                            Log.d("MainActivity", "Current location is null. Using defaults.");
-                            Log.e("MainActivity", "Exception: %s", task.getException());
-                            moveCamera();
-                        }
-                    }
-                });
-            }
-        } catch(SecurityException e)  {
-            Log.e("MainActivity: %s", e.getMessage());
-        }
+        updateLastLocation();
+        moveCamera(this.lastKnownLocation);
+        this.cameraIsOnUser = true;
+//        try {
+//            if (locationPermissionGranted) {
+//                Task locationResult = new FusedLocationProviderClient(getActivity()).updateLastLocation();
+//                locationResult.addOnCompleteListener(getActivity(), new OnCompleteListener() {
+//                    @Override
+//                    public void onComplete(@NonNull Task task) {
+//                        if (task.isSuccessful()) {
+//                            // Set the map's camera position to the current location of the device.
+//                            Location mLastKnownLocation = (Location)task.getResult();
+//                            if(mLastKnownLocation == null) {
+//                                Log.d("MainActivity", "Variable of last location is null");
+//                                cameraIsOnUser = false;
+//                                moveCamera();
+//                                map.getUiSettings().setMyLocationButtonEnabled(false);
+//                                return;
+//                            }
+//                            lastKnownLocation = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
+//                            moveCamera(mLastKnownLocation);
+//                            cameraIsOnUser = true;
+//                        } else {
+//                            Log.d("MainActivity", "Current location is null. Using defaults.");
+//                            Log.e("MainActivity", "Exception: %s", task.getException());
+//                            moveCamera();
+//                        }
+//                    }
+//                });
+//            }
+//        } catch(SecurityException e)  {
+//            Log.e("MainActivity: %s", e.getMessage());
+//        }
     }
 
-    private void getLastLocation() {
+    private void updateLastLocation() {
         fusedLocationClient.getLastLocation()
             .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
                 @Override
