@@ -65,17 +65,23 @@ public class MainActivity extends AppCompatActivity {
                         });
                         break;
                     case R.id.nav_help:
-                      break;
+                        if(helpFragment  == null)
+                            helpFragment = new HelpFragment();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, helpFragment).commit();
+                        break;
                     case R.id.nav_list:
                         db.DownloadPosts(new DB.FirebaseCallbackPosts() {
                             @Override
                             public void CallBack(ArrayList<Post> postList) {
                                 postsList = postList;
-                                if(accFragment  == null)
+                                if(listFragment  == null)
                                     listFragment = new ListFragment();
                                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, listFragment).commit();
                             }
                         });
+                        if(listFragment  == null)
+                            listFragment = new ListFragment();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, listFragment).commit();
                         break;
                     case R.id.nav_acc:
                         db.DownloadUsers(new DB.FirebaseCallbackUsers() {
@@ -90,10 +96,6 @@ public class MainActivity extends AppCompatActivity {
                         break;
                 }
 
-          //      assert selectedFragment != null;
-         //       getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-           //             selectedFragment).commit();
-           //             selectedFragment).commit();
                 return true;
             }
         };
