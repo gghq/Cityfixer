@@ -112,9 +112,9 @@ public class MainActivity extends AppCompatActivity {
                         });
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, errorListFragment).commit();
                         break;
-                    case R.id.nav_help:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, helpFragment).commit();
-                        break;
+//                    case R.id.nav_help:
+//                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, helpFragment).commit();
+//                        break;
                     case R.id.nav_list:
                         db.DownloadPosts(new DB.FirebaseCallbackPosts() {
                             @Override

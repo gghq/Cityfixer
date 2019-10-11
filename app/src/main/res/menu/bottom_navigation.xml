@@ -7,11 +7,11 @@
         android:icon="@drawable/ic_home_black_24dp"
         android:title="@string/home"/>
 
-    <item
-        android:id="@+id/nav_help"
-        android:icon="@drawable/ic_help_black_24dp"
-        android:title="@string/help"
-        android:visible="true" />
+<!--    <item-->
+<!--        android:id="@+id/nav_help"-->
+<!--        android:icon="@drawable/ic_help_black_24dp"-->
+<!--        android:title="@string/help"-->
+<!--        android:visible="true" />-->
     <item
         android:id="@+id/nav_list"
         android:icon="@drawable/ic_view_list_black_24dp"
