@@ -1,6 +1,7 @@
 package com.clr.cityfixer;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -51,8 +52,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     private LatLng lastKnownLocation;
     private Marker lastKnownMarker;
     private FusedLocationProviderClient fusedLocationClient;
-    private DB db;
+//    private DB db;
     private ArrayList<Post> postArrayList;
+    User loginedUser;
+    DB db = new DB();
 
     CircleButton btnAddPost;
 
@@ -99,11 +102,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
     private void displayPosts() {
         for (Post post : postArrayList) {
+            if(post != null)
             placeMarker(post);
         }
     }
 
     private void placeMarker(Post post) {
+        if(map != null)
         map.addMarker(new MarkerOptions()
                 .position(new LatLng(Double.valueOf(post.getLocation().getLatitude()), Double.valueOf(post.getLocation().getLongitude())))
                 .title("Hello world"));
@@ -116,6 +121,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     }
 
     private void placeLastKnownMarker() {
+        if(map != null)
         if(lastKnownMarker != null)
             lastKnownMarker.setVisible(false);
 
@@ -126,13 +132,15 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         lastKnownMarker.setVisible(true);
     }
     private void placeLastKnownMarker(LatLng position) {
-        if(lastKnownMarker != null)
+        if(map != null)
+        if(lastKnownMarker != null) {
+            lastKnownLocation = position;
             lastKnownMarker.setVisible(false);
-        lastKnownMarker = map.addMarker(new MarkerOptions()
+            lastKnownMarker = map.addMarker(new MarkerOptions()
                 .position(position)
                 .title("Hello world"));
-
-        lastKnownMarker.setVisible(true);
+            lastKnownMarker.setVisible(true);
+        }
     }
 
     @Override
@@ -146,12 +154,23 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             @Override
             public void onClick(View v) {
                 if(addWasAsked) {
-                    Intent intent = new Intent(getActivity(), AddPostActivity.class);
-                    intent.putExtra("latitude", lastKnownLocation.latitude);
-                    intent.putExtra("longitude", lastKnownLocation.longitude);
-                    startActivity(intent);
+                    if(((MainActivity)getActivity()).userEmail != null) {
+                        db.DownloadUser(new DB.FirebaseCallbackUser() {
+                            @Override
+                            public void CallBack(User user) {
+                                loginedUser = user;
+                                ((MainActivity) getActivity()).loginedUser = user;
+                                Intent intent = new Intent(getActivity(), AddPostActivity.class);
+                                intent.putExtra("latitude", String.valueOf(lastKnownLocation.latitude));
+                                intent.putExtra("longitude", String.valueOf(lastKnownLocation.longitude));
+                                intent.putExtra("username", user.getUserName());
+                                intent.putExtra("email", user.getUserEmail());
+                                startActivity(intent);
+                            }
+                        }, ((MainActivity) getActivity()).userEmail);
+                    }
                     addWasAsked = false;
-                    updatePosts();
+//                    updatePosts();
                 }
                 else {
                     updateLastLocation();
@@ -165,6 +184,30 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                 }
             }
         });
+//        if(((MainActivity)getActivity()).userEmail != null){
+//            btnAddPost.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    db.DownloadUser(new DB.FirebaseCallbackUser() {
+//                        @Override
+//                        public void CallBack(User user) {
+//                            loginedUser = user;
+//                            ((MainActivity)getActivity()).loginedUser = user;
+//                            Intent intent = new Intent(getActivity(), AddPostActivity.class);
+//                            updateLastLocation();
+//                            intent.putExtra("latitude", String.valueOf(lastKnownLocation.latitude));
+//                            intent.putExtra("longitude", String.valueOf(lastKnownLocation.longitude));
+//                            intent.putExtra("username", user.getUserName());
+//                            intent.putExtra("email", user.getUserEmail());
+//                            startActivity(intent);
+//                        }
+//                    }, ((MainActivity)getActivity()).userEmail);
+//                }
+//            });
+//        }
+//        else{
+//            Toast.makeText(getActivity(), "You are not loggined", Toast.LENGTH_LONG);
+//        }
     }
 
     @Override
@@ -175,13 +218,15 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         this.fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         this.lastKnownLocation = DEFAULT_POSITION;
+        updateLastLocation();
 
         this.addWasAsked = false;
 
         if(locationPermissionGranted) {
+            updateLastLocation();
             initialWorkWithMap();
         }
-        recursiveCameraCheck();
+//        recursiveCameraCheck();
     }
 
     private void recursiveCameraCheck() {
@@ -204,6 +249,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         if(checkMapServices()) {
             if(locationPermissionGranted) {
                 initialWorkWithMap();
+                updatePosts();
             }
             else {
                 getLocationPermission();

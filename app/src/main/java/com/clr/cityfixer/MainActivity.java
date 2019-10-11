@@ -19,6 +19,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.prefs.Preferences;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,7 +34,9 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Post> postsList;
     ArrayList<String> adminsList;
     ArrayList<User> usersList;
-
+    SharedPreferences preferences;
+    public User loginedUser;
+    String userEmail;
 
     public boolean buttonVisible;
 
@@ -61,6 +64,13 @@ public class MainActivity extends AppCompatActivity {
         if(sp.getString("currentUser", null) == null)
             buttonVisible = false;
         else buttonVisible = true;
+
+        //preferences = getBaseContext().getSharedPreferences("MODEL_PREFERENCES", Context.MODE_PRIVATE);
+        preferences = getSharedPreferences("MODEL_PREFERENCES", Context.MODE_PRIVATE);
+        if(preferences.getString("currentUser",null) != null)
+        {
+            userEmail = preferences.getString("currentUser",null).split("/")[0];
+        }
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
@@ -75,16 +85,21 @@ public class MainActivity extends AppCompatActivity {
                         db.DownloadPosts(new DB.FirebaseCallbackPosts() {
                             @Override
                             public void CallBack(ArrayList<Post> postList) {
-                                db.DownloadAdmins(new DB.FirebaseCallbackAdmins() {
+                                postsList = postList;
+                                db.DownloadUser(new DB.FirebaseCallbackUser() {
                                     @Override
-                                    public void CallBack(ArrayList<String> admins) {
-                                        adminsList = admins;
+//                                    public void CallBack(ArrayList<String> admins) {
+//                                        adminsList = admins;
 
+                                    public void CallBack(User user) {
+                                        loginedUser = user;
+                                        if(homeFragment  == null)
+                                            homeFragment = new HomeFragment();
                                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
                                         if(!isNetworkAvailable())
                                             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, errorListFragment).commit();
                                     }
-                                });
+                                }, userEmail);
                             }
                         });
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, errorListFragment).commit();
@@ -98,12 +113,27 @@ public class MainActivity extends AppCompatActivity {
                             public void CallBack(ArrayList<Post> postList) {
                                 postsList = postList;
 
-                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, listFragment).commit();
-                                if(!isNetworkAvailable())
-                                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, errorListFragment).commit();
+//                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, listFragment).commit();
+//                                if(!isNetworkAvailable())
+//                                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, errorListFragment).commit();
+//                            }
+//                        });
+//                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, errorListFragment).commit();
+                                db.DownloadAdmins(new DB.FirebaseCallbackAdmins() {
+                                    @Override
+                                    public void CallBack(ArrayList<String> admins) {
+                                        adminsList = admins;
+                                        if(listFragment  == null)
+                                            listFragment = new ListFragment();
+                                        try {
+                                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, listFragment).commit();
+                                        } catch (Exception ex) {
+
+                                        }
+                                    }
+                                });
                             }
                         });
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, errorListFragment).commit();
                         break;
                     case R.id.nav_acc:
                         db.DownloadUsers(new DB.FirebaseCallbackUsers() {

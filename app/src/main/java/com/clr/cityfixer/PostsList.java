@@ -34,8 +34,8 @@ public class PostsList extends ArrayAdapter<Post> {
 
         Post post = postsList.get(position);
 
-        textViewTitle.setText(post.getTitle());
-        textViewDescription.setText(post.getDescription());
+        textViewTitle.setText(post.getCategory());
+        textViewDescription.setText(post.getDate());
 
         return listViewItem;
     }
