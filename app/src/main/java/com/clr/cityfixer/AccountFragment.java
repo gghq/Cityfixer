@@ -59,6 +59,8 @@ public class AccountFragment extends Fragment {
     private ArrayList<User> usersList;
     private DB db;
 
+    private HomeFragment homeFragment;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -77,6 +79,11 @@ public class AccountFragment extends Fragment {
         db = new DB();
         return v;
     }
+
+    public void initField(HomeFragment homeFragment) {
+        this.homeFragment = homeFragment;
+    }
+
     @Nullable
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
@@ -102,7 +109,6 @@ public class AccountFragment extends Fragment {
             }
         });
            preferences = getContext().getSharedPreferences("MODEL_PREFERENCES",Context.MODE_PRIVATE);
-
             if(preferences.getString("currentUser",null)!= null)
             {
                 currentUser = (preferences.getString("currentUser",null));
@@ -171,6 +177,7 @@ public class AccountFragment extends Fragment {
                           //  editor.putString("currentUser",gson.toJson(user.getEmail()+"/"+user.getDisplayName()+"/"+user.getPhotoUrl()));
                             editor.putString("currentUser",(user.getEmail()+"/"+user.getDisplayName()+"/"+String.valueOf(user.getPhotoUrl())));
 
+
                             editor.apply();
                             if(FindUserByEmail(user.getEmail()) == null){
                                 appUser = new User(user.getEmail(), user.getDisplayName(), 1);
@@ -231,12 +238,17 @@ public class AccountFragment extends Fragment {
             text.append(email+"\n");
             logOutButton.setVisibility(View.VISIBLE);
             mGoogleBtn.setVisibility(View.INVISIBLE);
+
+            homeFragment.showButton();
+            ((MainActivity)getActivity()).buttonVisible = true;
         }
         else{
             text.setText("Login");
             logOutButton.setVisibility(View.INVISIBLE);
             mGoogleBtn.setVisibility(View.VISIBLE);
 
+            homeFragment.hideButton();
+            ((MainActivity)getActivity()).buttonVisible = false;
         }
 
     }
