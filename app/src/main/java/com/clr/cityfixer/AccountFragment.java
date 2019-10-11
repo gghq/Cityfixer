@@ -166,11 +166,14 @@ public class AccountFragment extends Fragment {
                 String email=arr[0];
 
                 if(usersList != null){
+
                     appUser = FindUserByEmail(email);
 
-                    text.setText("");
-                    text.append(appUser.getUserEmail()+"\n");
-                    text.append(appUser.getUserName()+"\n");
+                    if(appUser != null){
+                        text.setText("");
+                        text.append(appUser.getUserEmail()+"\n");
+                        text.append(appUser.getUserName()+"\n");
+                    }
                 }
 
                 logOutButton.setVisibility(View.VISIBLE);

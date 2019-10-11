@@ -27,7 +27,6 @@ public class PostDetails extends Fragment {
 
         textViewCategory = (TextView)v.findViewById(R.id.textViewCategory);
         textViewDate = (TextView)v.findViewById(R.id.textViewDate);
-        textViewLocation = (TextView)v.findViewById(R.id.textViewLocation);
         textViewStatus = (TextView)v.findViewById(R.id.textViewStatus);
         textViewUsername = (TextView)v.findViewById(R.id.textViewUsername);
         textViewDescription = (TextView)v.findViewById(R.id.textViewDescription);

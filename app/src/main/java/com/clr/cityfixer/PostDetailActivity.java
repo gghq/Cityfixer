@@ -2,6 +2,7 @@ package com.clr.cityfixer;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.DatePickerDialog;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -11,8 +12,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+
 public class PostDetailActivity extends AppCompatActivity {
-    TextView textViewStatus, textViewCategory, textViewDate, textViewDescription, textViewLocation, textViewUsername, textViewPriority;
+    TextView textViewStatus, textViewCategory, textViewDate, textViewDescription, textViewUsername, textViewPriority;
     ImageView imageView;
     Button btnApprove, btnIncresePriority;
     Post thisPost;
@@ -27,7 +30,6 @@ public class PostDetailActivity extends AppCompatActivity {
 
         textViewCategory = (TextView)findViewById(R.id.textViewCategory);
         textViewDate = (TextView)findViewById(R.id.textViewDate);
-        textViewLocation = (TextView)findViewById(R.id.textViewLocation);
         textViewStatus = (TextView)findViewById(R.id.textViewStatus);
         textViewUsername = (TextView)findViewById(R.id.textViewUsername);
         textViewDescription = (TextView)findViewById(R.id.textViewDescription);
@@ -104,8 +106,15 @@ public class PostDetailActivity extends AppCompatActivity {
                 textViewCategory.setText(post.getCategory());
                 textViewDate.setText(post.getDate());
                 textViewDescription.setText(post.getDescription());
-                textViewLocation.setText(post.getLocation().getLatitude() + " - " + post.getLocation().getLongitude());
-                textViewStatus.setText(String.valueOf(post.isApproved()));
+                //textViewLocation.setText(post.getLocation().getLatitude() + " - " + post.getLocation().getLongitude());
+                String approved;
+                if(post.isApproved()){
+                    approved = "Підтверджено";
+                }
+                else{
+                    approved = "Не підтверджено";
+                }
+                textViewStatus.setText(approved);
                 textViewUsername.setText(post.getUser().getUserName());
                 textViewPriority.setText(String.valueOf(post.getPriority()));
             }

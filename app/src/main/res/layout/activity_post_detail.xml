@@ -9,9 +9,10 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="99dp"
-        android:layout_height="wrap_content"
+        android:layout_width="170dp"
+        android:layout_height="225dp"
         android:layout_gravity="center"
+        android:layout_marginTop="16dp"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
@@ -29,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="TextView"
-        android:textSize="20sp" />
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/textView7"
@@ -46,7 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="TextView"
-        android:textSize="20sp" />
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/textView2"
@@ -63,7 +64,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="TextView"
-        android:textSize="20sp" />
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/textView3"
@@ -80,24 +81,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="TextView"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Місцеположення"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/textViewLocation"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="TextView"
-        android:textSize="20sp" />
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/textView5"
@@ -114,7 +98,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="TextView"
-        android:textSize="20sp" />
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/textView6"
@@ -132,26 +116,21 @@
         android:layout_gravity="center"
         android:layout_marginBottom="8dp"
         android:text="TextView"
-        android:textSize="20sp" />
+        android:textSize="18sp" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
+    <Button
+        android:id="@+id/btnIncresePriority"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:foregroundGravity="center"
+        android:text="Підвищити рейтинг" />
 
-        <Button
-            android:id="@+id/btnIncresePriority"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:text="Підвищити рейтинг" />
-
-        <Button
-            android:id="@+id/btnApprove"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right|end"
-            android:text="Підтвердити" />
-    </LinearLayout>
+    <Button
+        android:id="@+id/btnApprove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Підтвердити" />
 
 </LinearLayout>

@@ -17,16 +17,42 @@
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
+        android:id="@+id/textView9"
+        android:layout_width="148dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textViewStatus"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="130dp"
+        android:layout_marginEnd="132dp"
+        android:layout_marginBottom="12dp"
+        android:text="Статус"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
         android:id="@+id/textViewStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginBottom="452dp"
+        android:layout_marginStart="52dp"
+        android:layout_marginEnd="47dp"
+        android:layout_marginBottom="429dp"
         android:text="TextView" />
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="126dp"
+        android:layout_height="34dp"
+        android:layout_alignBottom="@+id/textViewStatus"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="150dp"
+        android:layout_marginBottom="-38dp"
+        android:text="Категорія"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textViewCategory"
@@ -35,10 +61,22 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginBottom="417dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginEnd="51dp"
+        android:layout_marginBottom="368dp"
         android:text="TextView" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="80dp"
+        android:layout_height="29dp"
+        android:layout_above="@+id/textViewDate"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="174dp"
+        android:layout_marginBottom="2dp"
+        android:text="Дата"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textViewDate"
@@ -49,8 +87,20 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="50dp"
         android:layout_marginEnd="49dp"
-        android:layout_marginBottom="384dp"
+        android:layout_marginBottom="316dp"
         android:text="TextView" />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="94dp"
+        android:layout_height="33dp"
+        android:layout_above="@+id/textViewDescription"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="163dp"
+        android:layout_marginBottom="7dp"
+        android:text="Опис"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textViewDescription"
@@ -59,22 +109,22 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="49dp"
-        android:layout_marginBottom="352dp"
+        android:layout_marginStart="59dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="255dp"
         android:text="TextView" />
 
     <TextView
-        android:id="@+id/textViewLocation"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
+        android:id="@+id/textView13"
+        android:layout_width="115dp"
+        android:layout_height="42dp"
+        android:layout_above="@+id/textViewUsername"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="48dp"
-        android:layout_marginEnd="51dp"
-        android:layout_marginBottom="314dp"
-        android:text="TextView" />
+        android:layout_marginEnd="141dp"
+        android:layout_marginBottom="4dp"
+        android:text="Користувач"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textViewUsername"
@@ -83,9 +133,9 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="49dp"
-        android:layout_marginBottom="277dp"
+        android:layout_marginStart="61dp"
+        android:layout_marginEnd="38dp"
+        android:layout_marginBottom="187dp"
         android:text="TextView" />
 
     <Button
@@ -96,10 +146,10 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="121dp"
-        android:layout_marginTop="515dp"
-        android:layout_marginEnd="114dp"
-        android:layout_marginBottom="162dp"
+        android:layout_marginStart="127dp"
+        android:layout_marginTop="569dp"
+        android:layout_marginEnd="108dp"
+        android:layout_marginBottom="108dp"
         android:text="Підвищити рейтинг" />
 
     <Button
@@ -110,10 +160,10 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="146dp"
-        android:layout_marginTop="588dp"
-        android:layout_marginEnd="143dp"
-        android:layout_marginBottom="95dp"
+        android:layout_marginStart="148dp"
+        android:layout_marginTop="638dp"
+        android:layout_marginEnd="140dp"
+        android:layout_marginBottom="45dp"
         android:text="Підтвердити" />
 
 </RelativeLayout>
