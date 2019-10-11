@@ -191,20 +191,28 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                         builder.setMessage("Для коректної робити програми потрібно мати зєднання з інтернетом")
                                 .setCancelable(false)
-                                .setPositiveButton("Зрозумів", new DialogInterface.OnClickListener() {
+                                .setPositiveButton("Зрозуміло", new DialogInterface.OnClickListener() {
                                     public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {}
                                 });
                         final AlertDialog alert = builder.create();
                         alert.show();
                     }
                     else {
+                        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setMessage("Синьою маркою позначено вашу приблизну геолокацію. Якщо вона є неточною, ви можете переробрати її довгим натисканням на мапі")
+                                .setCancelable(false)
+                                .setPositiveButton("Зрозуміло", new DialogInterface.OnClickListener() {
+                                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {}
+                                });
+                        final AlertDialog alert = builder.create();
+                        alert.show();
                         updateLastLocation();
-                        moveCamera(lastKnownLocation);
+                        moveCamera(lastKnownLocation, BIGGER_ZOOM);
                         placeLastKnownMarker();
 
-                        Toast.makeText(getActivity().getApplicationContext(),
-                                "Дана позиція є правильною? Якщо ні - оберіть потрібну позицію довгим натиском на марі", Toast.LENGTH_LONG)
-                                .show();
+//                        Toast.makeText(getActivity().getApplicationContext(),
+//                                "Дана позиція є правильною? Якщо ні - оберіть потрібну позицію довгим натиском на марі", Toast.LENGTH_LONG)
+//                                .show();
                         addWasAsked = true;
                     }
                 }
@@ -263,7 +271,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     public void onMapLongClick(LatLng point) {
         if(addWasAsked) {
             placeLastKnownMarker(point);
-            Toast.makeText(getActivity(), getAddress(getActivity(), point.latitude, point.longitude), Toast.LENGTH_LONG).show();
+//            Toast.makeText(getActivity(), getAddress(getActivity(), point.latitude, point.longitude), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -313,15 +321,16 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
     }
 
-    private void moveCamera(LatLng position, float zoom) {
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, zoom));
-    }
-    private void moveCamera(LatLng position) {
-//        map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_ZOOM));
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(position).zoom(DEFAULT_ZOOM).build();
+    public void moveCamera(LatLng position, float zoom) {
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(position).zoom(zoom).build();
         CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
         map.animateCamera(cameraUpdate);
 
+    }
+    public void moveCamera(LatLng position) {
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(position).zoom(DEFAULT_ZOOM).build();
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
+        map.animateCamera(cameraUpdate);
     }
     private void moveCamera(Location position) {
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(position.getLatitude(), position.getLongitude()), DEFAULT_ZOOM));

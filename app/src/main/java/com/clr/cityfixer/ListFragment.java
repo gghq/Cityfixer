@@ -3,6 +3,7 @@ package com.clr.cityfixer;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,8 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.prefs.Preferences;
@@ -51,6 +54,15 @@ public class ListFragment extends Fragment {
                     myIntent.putExtra("id", postList.get(position).getId());
                     myIntent.putExtra("isAdmin", isAdmin(user));//  String.valueOf(isAdmin("admtgrsein@gmail.com")));
                     startActivity(myIntent);
+                }
+            });
+            listViewPosts.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                    PostLocation location = postList.get((int)id).getLocation();
+                    LatLng pos = new LatLng(Double.valueOf(location.getLatitude()), Double.valueOf(location.getLongitude()));
+                    ((MainActivity) getActivity()).viewMarker(pos);
+                    return true;
                 }
             });
         //}

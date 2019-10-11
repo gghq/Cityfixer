@@ -15,11 +15,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.prefs.Preferences;
+
+import static com.clr.cityfixer.utils.Constants.*;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -156,6 +159,11 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         };
+
+    public void viewMarker(LatLng position) {
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
+        homeFragment.moveCamera(position, BIGGER_ZOOM);
+    }
 
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager

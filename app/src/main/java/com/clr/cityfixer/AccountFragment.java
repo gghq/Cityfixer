@@ -100,9 +100,23 @@ public class AccountFragment extends Fragment {
         });
         //}
 
+//        if(postList != null){
+//            PostsList adapter = new PostsList(getActivity(), postList);
+//            Listuserpost.setAdapter(adapter);
+//        }
+
         if(postList != null){
-            PostsList adapter = new PostsList(getActivity(), postList);
+            ArrayList<Post> userPosts=new ArrayList<Post>();
+            for(Post post:postList)
+            {
+                if(post.getUser().getUserEmail()==user)
+                {
+                    userPosts.add(post);
+                }
+            }
+            PostsList adapter = new PostsList(getActivity(), userPosts);
             Listuserpost.setAdapter(adapter);
+            Listuserpost.refreshDrawableState();
         }
 
         // Configure Google Sign In
@@ -291,6 +305,21 @@ public class AccountFragment extends Fragment {
 
             homeFragment.showButton();
             ((MainActivity)getActivity()).buttonVisible = true;
+
+            if(postList != null){
+                ArrayList<Post> userPosts=new ArrayList<Post>();
+                for(Post post:postList)
+                {
+                    if(post.getUser().getUserEmail()==email)
+                    {
+                        userPosts.add(post);
+                    }
+                }
+                PostsList adapter = new PostsList(getActivity(), userPosts);
+                Listuserpost.setAdapter(adapter);
+                Listuserpost.refreshDrawableState();
+            }
+            
         }
         else{
             text.setText("Login");
