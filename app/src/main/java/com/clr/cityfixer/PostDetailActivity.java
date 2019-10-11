@@ -67,7 +67,7 @@ public class PostDetailActivity extends AppCompatActivity {
                         @Override
                         public void CallBack(final Post post) {
                             thisPost = post;
-                            db.DownloadUser(new DB.FirebaseCallbackUser() {
+                            db.DownloadUserById(new DB.FirebaseCallbackUser() {
                                 @Override
                                 public void CallBack(User user) {
                                     thisPost.setPriority(thisPost.getPriority()+1);
@@ -82,7 +82,7 @@ public class PostDetailActivity extends AppCompatActivity {
                                     }
                                     DownloadPost(thisPost.getId());
                                 }
-                            }, thisPost.getUser().getUserEmail());
+                            }, thisPost.getUser().getUserId());
                         }
                     }, thisPost.getId());
                 }

@@ -31,6 +31,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -43,8 +48,8 @@ public class AddPostActivity extends AppCompatActivity {
     Spinner spinnerCategories;
     Intent takenImage;
     public DB db;
-    Dexter dexter;
     User user;
+    DatabaseReference databaseReferenceU;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +62,12 @@ public class AddPostActivity extends AppCompatActivity {
 
         spinnerCategories = (Spinner)findViewById(R.id.spinnerCategories);
 
+         databaseReferenceU = FirebaseDatabase.getInstance().getReference("users");
+
         db = new DB();
-        //dexter.withPermission(Manifest.permission.CAMERA);
+
+
+
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, 0);
@@ -66,7 +75,8 @@ public class AddPostActivity extends AppCompatActivity {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                user = new User(getIntent().getStringExtra("email"),getIntent().getStringExtra("username"), 1);
+                String id = databaseReferenceU.child("users").push().getKey();
+                user = new User(id, getIntent().getStringExtra("email"),getIntent().getStringExtra("username"), 1);
                 String latitude = getIntent().getStringExtra("latitude");
                 String longitude = getIntent().getStringExtra("longitude");
                 String description = "";

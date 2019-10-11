@@ -82,6 +82,29 @@ public class DB {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("!!!!!!!", databaseError.getMessage());
+            }
+        });
+    }
+
+    public void DownloadUserById(final FirebaseCallbackUser firebaseCallback, final String id){
+        databaseReferenceU.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue() == null){
+                    return;
+                }
+                for(DataSnapshot dS : dataSnapshot.getChildren()){
+                    User user = dS.getValue(User.class);
+                    if(user.getUserId().equals(id)){
+                        firebaseCallback.CallBack(user);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("!!!!!!!", databaseError.getMessage());
             }
         });
     }

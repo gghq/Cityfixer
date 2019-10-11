@@ -180,7 +180,7 @@ public class AccountFragment extends Fragment {
 
                             editor.apply();
                             if(FindUserByEmail(user.getEmail()) == null){
-                                appUser = new User(user.getEmail(), user.getDisplayName(), 1);
+                                appUser = new User(user.getUid(), user.getEmail(), user.getDisplayName(), 1);
                                 db.SaveUser(appUser);
                             }
                         }
