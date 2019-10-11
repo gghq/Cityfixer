@@ -33,37 +33,40 @@
         android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
         android:visibility="invisible"/>
+
+    <Button
+        android:id="@+id/logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="26dp"
+        android:layout_marginRight="26dp"
+        android:layout_marginBottom="363dp"
+        android:background="@drawable/round_bg"
+        android:text="Logout"
+        android:visibility="invisible" />
+
     <Button
         android:id="@+id/login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="60dp"
         android:layout_marginLeft="26dp"
         android:layout_marginRight="26dp"
+        android:layout_marginBottom="363dp"
+        android:background="@drawable/round_bg"
         android:text="Login with google"
-        android:background="@drawable/round_bg"
 
         />
 
-    <com.google.android.gms.common.SignInButton
-        android:visibility="invisible"
-
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/googleBtn"
-        ></com.google.android.gms.common.SignInButton>
-
-    <Button
-        android:visibility="invisible"
-        android:id="@+id/logout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <ListView
+        android:id="@+id/listuser"
+        android:layout_width="396dp"
+        android:layout_height="312dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="60dp"
-        android:layout_marginLeft="26dp"
-        android:layout_marginRight="26dp"
-        android:text="Logout"
-        android:background="@drawable/round_bg"
-        />
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="22dp" />
 </RelativeLayout>

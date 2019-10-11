@@ -1,5 +1,6 @@
 package com.clr.cityfixer;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,8 +10,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -35,6 +38,7 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -44,6 +48,8 @@ import androidx.fragment.app.Fragment;
 import static android.content.ContentValues.TAG;
 
 public class AccountFragment extends Fragment {
+    private Activity context;
+    private List<Post> postsList;
     private static final int RC_SIGN_IN = 1;
     private Button mGoogleBtn;
     private Button logOutButton;
@@ -58,13 +64,46 @@ public class AccountFragment extends Fragment {
     private User appUser;
     private ArrayList<User> usersList;
     private DB db;
+    ListView Listuserpost;
 
     private HomeFragment homeFragment;
 
+    ArrayList<Post> postList;
+    ArrayList<String> adminsList;
+    String user;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_acc, container, false);
+        View v = inflater.inflate(R.layout.fragment_acc,container,false);
+
+        Listuserpost = (ListView)v.findViewById(R.id.listuser);
+
+        postList = ((MainActivity)getActivity()).postsList;
+        adminsList = ((MainActivity)getActivity()).adminsList;
+
+        preferences = getContext().getSharedPreferences("MODEL_PREFERENCES", Context.MODE_PRIVATE);
+        if(preferences.getString("currentUser",null) != null)
+        {
+            user = preferences.getString("currentUser",null).split("/")[0];
+        }
+
+        //if(((MainActivity)getActivity()).loginedUser != null){
+        //user = ((MainActivity)getActivity()).loginedUser;
+        Listuserpost.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent myIntent = new Intent(getActivity(), PostDetailActivity.class);
+                myIntent.putExtra("id", postList.get(position).getId());
+                myIntent.putExtra("isAdmin", isAdmin(user));//  String.valueOf(isAdmin("admtgrsein@gmail.com")));
+                startActivity(myIntent);
+            }
+        });
+        //}
+
+        if(postList != null){
+            PostsList adapter = new PostsList(getActivity(), postList);
+            Listuserpost.setAdapter(adapter);
+        }
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -79,6 +118,15 @@ public class AccountFragment extends Fragment {
         db = new DB();
         return v;
     }
+    public boolean isAdmin(String email){
+        for(int i = 0; i < adminsList.size(); i++){
+            if(adminsList.get(i).equals(email)){
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public void initField(HomeFragment homeFragment) {
         this.homeFragment = homeFragment;
@@ -95,6 +143,7 @@ public class AccountFragment extends Fragment {
         image = (ImageView)getView().findViewById(R.id.image);
         progressBar = (ProgressBar)getView().findViewById(R.id.progress);
         logOutButton = (Button)getView().findViewById(R.id.logout);
+        Listuserpost = (ListView)getView().findViewById(R.id.listuser);
         mGoogleBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -238,6 +287,7 @@ public class AccountFragment extends Fragment {
             text.append(email+"\n");
             logOutButton.setVisibility(View.VISIBLE);
             mGoogleBtn.setVisibility(View.INVISIBLE);
+            Listuserpost.setVisibility((View.VISIBLE));
 
             homeFragment.showButton();
             ((MainActivity)getActivity()).buttonVisible = true;
@@ -246,7 +296,7 @@ public class AccountFragment extends Fragment {
             text.setText("Login");
             logOutButton.setVisibility(View.INVISIBLE);
             mGoogleBtn.setVisibility(View.VISIBLE);
-
+            Listuserpost.setVisibility((View.INVISIBLE));
             homeFragment.hideButton();
             ((MainActivity)getActivity()).buttonVisible = false;
         }
