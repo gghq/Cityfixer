@@ -183,10 +183,17 @@ public class AccountFragment extends Fragment {
 
                     appUser = FindUserByEmail(email);
 
-                    if(appUser != null){
-                        text.setText("");
+//<<<<<<< HEAD
+//                    if(appUser != null){
+//                        text.setText("");
+//                        text.append(appUser.getUserEmail()+"\n");
+//                        text.append(appUser.getUserName()+"\n");
+//=======
+                    text.setText("");
+                    if (appUser != null) {
                         text.append(appUser.getUserEmail()+"\n");
                         text.append(appUser.getUserName()+"\n");
+//>>>>>>> 486337ccb932e308734f4eee92d3e03420d6da1b
                     }
                 }
 
