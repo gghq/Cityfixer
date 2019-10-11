@@ -1,10 +1,13 @@
 <resources>
     <string name="app_name">Cityfixer</string>
     <string name="title_activity_maps">Map</string>
-    <string name="home">Додому</string>
+    <string name="home">Головна</string>
     <string name="help">Помічник</string>
     <string name="list">Список</string>
     <string name="acc">Кабінет</string>
+    <string name="list_post">Список публікацій</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
 
     <array name="categories">
         <item>Graffiti</item>
