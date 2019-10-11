@@ -75,8 +75,7 @@ public class AddPostActivity extends AppCompatActivity {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String id = databaseReferenceU.child("users").push().getKey();
-                user = new User(id, getIntent().getStringExtra("email"),getIntent().getStringExtra("username"), 1);
+                user = new User(getIntent().getStringExtra("id"), getIntent().getStringExtra("email"),getIntent().getStringExtra("username"), 1);
                 String latitude = getIntent().getStringExtra("latitude");
                 String longitude = getIntent().getStringExtra("longitude");
                 String description = "";

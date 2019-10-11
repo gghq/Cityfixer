@@ -29,6 +29,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
@@ -229,7 +231,9 @@ public class AccountFragment extends Fragment {
 
                             editor.apply();
                             if(FindUserByEmail(user.getEmail()) == null){
-                                appUser = new User(user.getUid(), user.getEmail(), user.getDisplayName(), 1);
+                                DatabaseReference databaseReferenceU = FirebaseDatabase.getInstance().getReference("users");
+                                String id = databaseReferenceU.child("users").push().getKey();
+                                appUser = new User(id, user.getEmail(), user.getDisplayName(), 1);
                                 db.SaveUser(appUser);
                             }
                         }

@@ -182,6 +182,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                                 intent.putExtra("longitude", String.valueOf(lastKnownLocation.longitude));
                                 intent.putExtra("username", user.getUserName());
                                 intent.putExtra("email", user.getUserEmail());
+                                intent.putExtra("id", user.getUserId());
                                 startActivity(intent);
                             }
                         }, ((MainActivity) getActivity()).userEmail);
