@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Fragment homeFragment;
+    private HomeFragment homeFragment;
     private Fragment accFragment;
     private Fragment listFragment;
     private Fragment helpFragment;
@@ -34,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<User> usersList;
 
 
+    public boolean buttonVisible;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         homeFragment = new HomeFragment();
         listFragment = new ListFragment();
         accFragment = new AccountFragment();
+        ((AccountFragment)accFragment).initField(homeFragment);
         helpFragment = new HelpFragment();
 
         errorListFragment = new Fragment();
@@ -51,6 +55,13 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
 
         db = new DB();
+
+        SharedPreferences sp;
+        sp = getSharedPreferences("MODEL_PREFERENCES", MODE_PRIVATE);
+
+        if(sp.getString("currentUser", null) == null)
+            buttonVisible = false;
+        else buttonVisible = true;
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =

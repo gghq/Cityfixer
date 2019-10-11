@@ -74,7 +74,17 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         });
 
         btnAddPost = (CircleButton)v.findViewById(R.id.btnAddPost);
+        btnAddPost.setVisibility(((MainActivity)getActivity()).buttonVisible ? View.VISIBLE : View.INVISIBLE);
+
         return v;
+    }
+
+    public void hideButton() {
+        this.btnAddPost.setVisibility(View.INVISIBLE);
+    }
+
+    public void showButton() {
+        this.btnAddPost.setVisibility(View.VISIBLE);
     }
 
     private void updatePosts() {
