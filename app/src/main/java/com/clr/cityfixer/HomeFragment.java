@@ -32,9 +32,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
 
 import at.markushi.ui.CircleButton;
 
@@ -46,7 +49,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     private boolean locationPermissionGranted;
     private boolean cameraIsOnUser;
     private LatLng lastKnownLocation;
+    private Marker lastKnownMarker;
     private FusedLocationProviderClient fusedLocationClient;
+    private DB db;
+    private ArrayList<Post> postArrayList;
 
     CircleButton btnAddPost;
 
@@ -58,8 +64,65 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         View v = inflater.inflate(R.layout.fragment_home,container,false);
         this.cameraIsOnUser = false;
 
+        db = new DB();
+        db.DownloadPosts(new DB.FirebaseCallbackPosts() {
+            @Override
+            public void CallBack(ArrayList<Post> postList) {
+                postArrayList = postList;
+                displayPosts();
+            }
+        });
+
         btnAddPost = (CircleButton)v.findViewById(R.id.btnAddPost);
         return v;
+    }
+
+    private void updatePosts() {
+        db.DownloadPosts(new DB.FirebaseCallbackPosts() {
+            @Override
+            public void CallBack(ArrayList<Post> postList) {
+                postArrayList = postList;
+                displayPosts();
+            }
+        });
+    }
+
+    private void displayPosts() {
+        for (Post post : postArrayList) {
+            placeMarker(post);
+        }
+    }
+
+    private void placeMarker(Post post) {
+        map.addMarker(new MarkerOptions()
+                .position(new LatLng(Double.valueOf(post.getLocation().getLatitude()), Double.valueOf(post.getLocation().getLongitude())))
+                .title("Hello world"));
+    }
+
+    private void placeMarker(LatLng position) {
+        map.addMarker(new MarkerOptions()
+                .position(position)
+                .title("Hello world"));
+    }
+
+    private void placeLastKnownMarker() {
+        if(lastKnownMarker != null)
+            lastKnownMarker.setVisible(false);
+
+        lastKnownMarker = map.addMarker(new MarkerOptions()
+                .position(lastKnownLocation)
+                .title("Hello world"));
+
+        lastKnownMarker.setVisible(true);
+    }
+    private void placeLastKnownMarker(LatLng position) {
+        if(lastKnownMarker != null)
+            lastKnownMarker.setVisible(false);
+        lastKnownMarker = map.addMarker(new MarkerOptions()
+                .position(position)
+                .title("Hello world"));
+
+        lastKnownMarker.setVisible(true);
     }
 
     @Override
@@ -72,15 +135,24 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         btnAddPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(addWasAsked) {
+                    Intent intent = new Intent(getActivity(), AddPostActivity.class);
+                    intent.putExtra("latitude", lastKnownLocation.latitude);
+                    intent.putExtra("longitude", lastKnownLocation.longitude);
+                    startActivity(intent);
+                    addWasAsked = false;
+                    updatePosts();
+                }
+                else {
+                    updateLastLocation();
+                    moveCamera(lastKnownLocation);
+                    placeLastKnownMarker();
 
-                Intent intent = new Intent(getActivity(), AddPostActivity.class);
-                updateLastLocation();
-                Toast.makeText(getActivity().getApplicationContext(),
-                        "New marker added@" + lastKnownLocation.toString(), Toast.LENGTH_LONG)
+                    Toast.makeText(getActivity().getApplicationContext(),
+                        "Дана позиція є правильною? Якщо ні - оберіть потрібну позицію довгим натиском на марі", Toast.LENGTH_LONG)
                         .show();
-                intent.putExtra("latitude", lastKnownLocation.latitude);
-                intent.putExtra("longitude", lastKnownLocation.longitude);
-                startActivity(intent);
+                    addWasAsked = true;
+                }
             }
         });
     }
@@ -131,13 +203,15 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
     @Override
     public void onMapLongClick(LatLng point) {
-
-        map.addMarker(new MarkerOptions().position(point).title(
-                point.toString()));
-
-        Toast.makeText(getActivity().getApplicationContext(),
-                "New marker added@" + point.toString(), Toast.LENGTH_LONG)
-                .show();
+        if(addWasAsked) {
+            placeLastKnownMarker(point);
+        }
+//        map.addMarker(new MarkerOptions().position(point).title(
+//                point.toString()));
+//
+//        Toast.makeText(getActivity().getApplicationContext(),
+//                "New marker added@" + point.toString(), Toast.LENGTH_LONG)
+//                .show();
     }
 
     private void initialWorkWithMap() {
