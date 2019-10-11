@@ -8,6 +8,7 @@
     <string name="list_post">Список публікацій</string>
     <string name="title">Title</string>
     <string name="description">Description</string>
+    <string name="info"></string>
 
     <array name="categories">
         <item>Graffiti</item>
