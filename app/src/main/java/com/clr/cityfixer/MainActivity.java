@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Fragment homeFragment;
+    private HomeFragment homeFragment;
     private Fragment accFragment;
     private Fragment listFragment;
     private Fragment helpFragment;
@@ -34,13 +35,15 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<User> usersList;
 
 
+    public boolean buttonVisible;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         homeFragment = new HomeFragment();
         accFragment = new AccountFragment();
-        listFragment = new ListFragment();
+        ((AccountFragment)accFragment).initField(homeFragment);
         helpFragment = new HelpFragment();
 
         errorListFragment = new ErrorConnection();
@@ -51,6 +54,13 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
 
         db = new DB();
+
+        SharedPreferences sp;
+        sp = getSharedPreferences("MODEL_PREFERENCES", MODE_PRIVATE);
+
+        if(sp.getString("currentUser", null) == null)
+            buttonVisible = false;
+        else buttonVisible = true;
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
@@ -69,7 +79,10 @@ public class MainActivity extends AppCompatActivity {
                                     @Override
                                     public void CallBack(ArrayList<String> admins) {
                                         adminsList = admins;
+
                                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
+                                        if(!isNetworkAvailable())
+                                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, errorListFragment).commit();
                                     }
                                 });
                             }
@@ -86,6 +99,8 @@ public class MainActivity extends AppCompatActivity {
                                 postsList = postList;
 
                                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, listFragment).commit();
+                                if(!isNetworkAvailable())
+                                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, errorListFragment).commit();
                             }
                         });
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, errorListFragment).commit();
@@ -96,6 +111,8 @@ public class MainActivity extends AppCompatActivity {
                             public void CallBack(ArrayList<User> users) {
                                 usersList = users;
                                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, accFragment).commit();
+                                if(!isNetworkAvailable())
+                                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, errorListFragment).commit();
                             }
                         });
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, errorListFragment).commit();
