@@ -1,100 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".PostDetailActivity">
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="189dp"
-        android:layout_height="218dp"
-        app:layout_constraintBottom_toTopOf="@+id/textViewStatus"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="170dp"
+        android:layout_height="225dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
-        android:id="@+id/textViewStatus"
-        android:layout_width="match_parent"
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="17dp"
-        android:text="TextView"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/textViewCategory"
-        tools:layout_editor_absoluteX="50dp" />
+        android:layout_gravity="center"
+        android:text="Статус"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/textViewCategory"
-        android:layout_width="match_parent"
+        android:id="@+id/textViewStatus"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="21dp"
+        android:layout_gravity="center"
         android:text="TextView"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/textViewDate"
-        tools:layout_editor_absoluteX="48dp" />
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Пріоритет"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textViewPriority"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="TextView"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Дата"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textViewDate"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
+        android:layout_gravity="center"
         android:text="TextView"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/textViewDescription"
-        tools:layout_editor_absoluteX="50dp" />
+        android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/textViewUsername"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        android:text="TextView"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/btnIncresePriority"
-        tools:layout_editor_absoluteX="48dp" />
-
-    <TextView
-        android:id="@+id/textViewLocation"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="22dp"
-        android:text="TextView"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/textViewUsername"
-        tools:layout_editor_absoluteX="48dp" />
-
-    <Button
-        android:id="@+id/btnApprove"
+        android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Підтвердити"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.887" />
+        android:layout_gravity="center"
+        android:text="Опис"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textViewDescription"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="17dp"
+        android:layout_gravity="center"
         android:text="TextView"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/textViewLocation"
-        tools:layout_editor_absoluteX="46dp" />
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Категорія"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textViewCategory"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="TextView"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Користувач"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textViewUsername"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="8dp"
+        android:text="TextView"
+        android:textSize="18sp" />
 
     <Button
         android:id="@+id/btnIncresePriority"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Підвищити рейтинг"
-        app:layout_constraintBottom_toTopOf="@+id/btnApprove"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_gravity="center"
+        android:foregroundGravity="center"
+        android:text="Підвищити рейтинг" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <Button
+        android:id="@+id/btnApprove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Підтвердити" />
+
+</LinearLayout>

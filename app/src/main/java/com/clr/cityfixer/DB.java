@@ -40,6 +40,10 @@ public class DB {
         databaseReferenceU.child(id).setValue(user);
     }
 
+    public void UpdateUser(User user, String id){
+        databaseReferenceU.child(id).setValue(user);
+    }
+
     public void DownloadUsers(final FirebaseCallbackUsers firebaseCallback){
         final ArrayList<User> users = new ArrayList<User>();
         databaseReferenceU.addValueEventListener(new ValueEventListener() {
@@ -199,6 +203,10 @@ public class DB {
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
+    }
+
+    public void UpdatePost(final Post post){
+        databaseReference.child(post.getId()).setValue(post);
     }
 
     public void DownloadPost(final FirebaseCallbackPost firebaseCallback, final LatLng location){

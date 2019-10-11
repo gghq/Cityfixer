@@ -31,7 +31,7 @@ public class Splashscreen extends AppCompatActivity {
                 .withBackgroundColor(Color.parseColor("#ffffff"))
                 .withLogo(R.mipmap.clr_logo);
 
-        preferences = getSharedPreferences("MODEL_PREFERENCES", Context.MODE_PRIVATE);
+        /*preferences = getSharedPreferences("MODEL_PREFERENCES", Context.MODE_PRIVATE);
         if(preferences.getString("currentUser",null) != null)
         {
             userEmail = preferences.getString("currentUser",null).split("/")[0];
@@ -42,7 +42,7 @@ public class Splashscreen extends AppCompatActivity {
             public void CallBack(User user) {
                 loginedUser = user;
             }
-        }, userEmail);
+        }, userEmail);*/
 
         View  view = config.create();
         setContentView(view);
