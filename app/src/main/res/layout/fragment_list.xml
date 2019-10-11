@@ -4,6 +4,31 @@
 
     <ListView
         android:id="@+id/listViewPosts"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_width="wrap_content"
+        android:layout_height="668dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="29dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="5dp"
+        android:divider="@null"
+        android:dividerHeight="10dp"
+        android:insetLeft="5.0dp"
+        android:insetTop="8.0dp"
+        android:insetRight="5.0dp"
+        android:insetBottom="8.0dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="185dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="114dp"
+        android:layout_marginEnd="112dp"
+        android:text="@string/list_post"
+        android:textSize="20sp" />
 </RelativeLayout>

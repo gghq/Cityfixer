@@ -40,11 +40,11 @@ import java.util.Calendar;
 public class AddPostActivity extends AppCompatActivity {
     ImageView imgView;
     Button btnSave;
-    EditText editTextTitle, editTextDescription;
     Spinner spinnerCategories;
     Intent takenImage;
     public DB db;
     Dexter dexter;
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,13 +55,10 @@ public class AddPostActivity extends AppCompatActivity {
 
         btnSave = (Button)findViewById(R.id.btnSend);
 
-        editTextTitle = (EditText)findViewById(R.id.editTextTitle);
-        editTextDescription = (EditText)findViewById(R.id.editTextDescription);
-
         spinnerCategories = (Spinner)findViewById(R.id.spinnerCategories);
 
         db = new DB();
-//        dexter.withPermission(Manifest.permission.CAMERA);
+        //dexter.withPermission(Manifest.permission.CAMERA);
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, 0);
@@ -69,17 +66,17 @@ public class AddPostActivity extends AppCompatActivity {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                user = new User(getIntent().getStringExtra("username"), getIntent().getStringExtra("email"), 1);
                 String latitude = getIntent().getStringExtra("latitude");
                 String longitude = getIntent().getStringExtra("longitude");
-                String user = "user";
-                String title = editTextTitle.getText().toString().trim();
-                String description = editTextDescription.getText().toString().trim();
+                String description = "";
                 PostLocation location = new PostLocation(latitude, longitude);
                 String date = Calendar.getInstance().getTime().toString();
                 String category = spinnerCategories.getSelectedItem().toString();
+                int priority = 0;
                 boolean approved = false;
 
-                Post post = new Post(user, title, description, location, date, category, approved);
+                Post post = new Post(user, description, location, date, category, approved, priority);
                 db.SavePost(post, takenImage);
 
                 Intent myIntent = new Intent(AddPostActivity.this, MainActivity.class);
@@ -90,8 +87,10 @@ public class AddPostActivity extends AppCompatActivity {
 
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        takenImage = data;
-        Bitmap bitmap = (Bitmap)data.getExtras().get("data");
-        imgView.setImageBitmap(bitmap);
+        if(data != null) {
+            takenImage = data;
+            Bitmap bitmap = (Bitmap)data.getExtras().get("data");
+            imgView.setImageBitmap(bitmap);
+        }
     }
 }

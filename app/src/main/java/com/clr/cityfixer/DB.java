@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -30,8 +31,56 @@ import java.util.List;
 
 public class DB {
     private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("posts");
+    private DatabaseReference databaseReferenceU = FirebaseDatabase.getInstance().getReference("users");
     private DatabaseReference databaseReferenceA = FirebaseDatabase.getInstance().getReference("admins");
     private StorageReference storageReference = FirebaseStorage.getInstance().getReference("images");
+
+    public void SaveUser(User user){
+        String id = databaseReferenceU.child("users").push().getKey();
+        databaseReferenceU.child(id).setValue(user);
+    }
+
+    public void DownloadUsers(final FirebaseCallbackUsers firebaseCallback){
+        final ArrayList<User> users = new ArrayList<User>();
+        databaseReferenceU.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue() == null){
+                    return;
+                }
+                for(DataSnapshot dS : dataSnapshot.getChildren()){
+                    User user = dS.getValue(User.class);
+                    users.add(user);
+                }
+                firebaseCallback.CallBack(users);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
+
+    public void DownloadUser(final FirebaseCallbackUser firebaseCallback, final String email){
+        databaseReferenceU.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue() == null){
+                    return;
+                }
+                for(DataSnapshot dS : dataSnapshot.getChildren()){
+                    User user = dS.getValue(User.class);
+                    if(user.getUserEmail().equals(email)){
+                        firebaseCallback.CallBack(user);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
 
     public void SaveAdmin(String email){
         String id = databaseReferenceA.child("admins").push().getKey();
@@ -91,7 +140,7 @@ public class DB {
     }
 
     public void DownloadImageBefore(final FirebaseCallbackImg firebaseCallback, String id){
-        StorageReference storageRef = storageReference.child(id + "before.jpg");
+        StorageReference storageRef = storageReference.child(id + "/before.jpg");
 
         final long ONE_MEGABYTE = 1024 * 1024;
         storageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
@@ -130,10 +179,8 @@ public class DB {
         String id = databaseReference.child("posts").push().getKey();
         post.setImage(id);
         post.setId(id);
-        if(!TextUtils.isEmpty(post.getTitle()) && !TextUtils.isEmpty(post.getDescription())){
-            databaseReference.child(id).setValue(post);
-            SaveImageBefore(img, id);
-        }
+        databaseReference.child(id).setValue(post);
+        SaveImageBefore(img, id);
     }
 
     public void DownloadPost(final FirebaseCallbackPost firebaseCallback, final String id){
@@ -204,6 +251,14 @@ public class DB {
 
     public interface FirebaseCallbackAdmins{
         void CallBack(ArrayList<String> admins);
+    }
+
+    public interface FirebaseCallbackUsers{
+        void CallBack(ArrayList<User> users);
+    }
+
+    public interface FirebaseCallbackUser{
+        void CallBack(User user);
     }
 
     private Bitmap ByteArrayToBitmap(byte[] byteArray){

@@ -1,15 +1,20 @@
 package com.clr.cityfixer;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Camera;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
-import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -27,16 +32,26 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+import at.markushi.ui.CircleButton;
 
 import static com.clr.cityfixer.utils.Constants.*;
 
@@ -45,9 +60,16 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     GoogleMap map;
     private boolean locationPermissionGranted;
     private boolean cameraIsOnUser;
-    private LatLng location;
+    private LatLng lastKnownLocation;
+    private Marker lastKnownMarker;
+    private FusedLocationProviderClient fusedLocationClient;
+    private ArrayList<Post> postArrayList;
+    User loginedUser;
+    DB db = new DB();
 
-    FloatingActionButton btnAddPost;
+    CircleButton btnAddPost;
+
+    private boolean addWasAsked;
 
     @Nullable
     @Override
@@ -55,8 +77,84 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         View v = inflater.inflate(R.layout.fragment_home,container,false);
         this.cameraIsOnUser = false;
 
-        btnAddPost = (FloatingActionButton)v.findViewById(R.id.btnAddPost);
+        db = new DB();
+        db.DownloadPosts(new DB.FirebaseCallbackPosts() {
+            @Override
+            public void CallBack(ArrayList<Post> postList) {
+                postArrayList = postList;
+                displayPosts();
+            }
+        });
+
+        btnAddPost = (CircleButton)v.findViewById(R.id.btnAddPost);
+        btnAddPost.setVisibility(((MainActivity)getActivity()).buttonVisible ? View.VISIBLE : View.INVISIBLE);
+
         return v;
+    }
+
+    public void hideButton() {
+        this.btnAddPost.setVisibility(View.INVISIBLE);
+    }
+
+    public void showButton() {
+        this.btnAddPost.setVisibility(View.VISIBLE);
+    }
+
+    private void updatePosts() {
+        db.DownloadPosts(new DB.FirebaseCallbackPosts() {
+            @Override
+            public void CallBack(ArrayList<Post> postList) {
+                postArrayList = postList;
+                displayPosts();
+            }
+        });
+    }
+
+    private void displayPosts() {
+        for (Post post : postArrayList) {
+            if(post != null)
+            placeMarker(post);
+        }
+    }
+
+    private void placeMarker(Post post) {
+        if(map != null)
+        map.addMarker(new MarkerOptions()
+                .position(new LatLng(Double.valueOf(post.getLocation().getLatitude()), Double.valueOf(post.getLocation().getLongitude())))
+//                .title("Hello world")
+        );
+    }
+
+    private void placeMarker(LatLng position) {
+        map.addMarker(new MarkerOptions()
+                .position(position)
+//                .title("Hello world")
+        );
+    }
+
+    private void placeLastKnownMarker() {
+        if(map != null)
+        if(lastKnownMarker != null)
+            lastKnownMarker.setVisible(false);
+
+        lastKnownMarker = map.addMarker(new MarkerOptions()
+                .position(lastKnownLocation)
+//                .title("Hello world")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+
+        lastKnownMarker.setVisible(true);
+    }
+    private void placeLastKnownMarker(LatLng position) {
+        if(map != null)
+        if(lastKnownMarker != null) {
+            lastKnownLocation = position;
+            lastKnownMarker.setVisible(false);
+            lastKnownMarker = map.addMarker(new MarkerOptions()
+                .position(position)
+//                .title("Hello world")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+            lastKnownMarker.setVisible(true);
+        }
     }
 
     @Override
@@ -69,40 +167,68 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         btnAddPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), AddPostActivity.class);
-                intent.putExtra("latitude", location.latitude);
-                intent.putExtra("longitude", location.longitude);
-                startActivity(intent);
+                if(addWasAsked) {
+                    if(((MainActivity)getActivity()).userEmail != null) {
+                         db.DownloadUser(new DB.FirebaseCallbackUser() {
+                            @Override
+                            public void CallBack(User user) {
+                                loginedUser = user;
+                                ((MainActivity) getActivity()).loginedUser = user;
+                                Intent intent = new Intent(getActivity(), AddPostActivity.class);
+                                intent.putExtra("latitude", String.valueOf(lastKnownLocation.latitude));
+                                intent.putExtra("longitude", String.valueOf(lastKnownLocation.longitude));
+                                intent.putExtra("username", user.getUserName());
+                                intent.putExtra("email", user.getUserEmail());
+                                startActivity(intent);
+                            }
+                        }, ((MainActivity) getActivity()).userEmail);
+                    }
+                    addWasAsked = false;
+//                    updatePosts();
+                }
+                else {
+                    if(!isOnline()) {
+                        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setMessage("Для коректної робити програми потрібно мати зєднання з інтернетом")
+                                .setCancelable(false)
+                                .setPositiveButton("Зрозумів", new DialogInterface.OnClickListener() {
+                                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {}
+                                });
+                        final AlertDialog alert = builder.create();
+                        alert.show();
+                    }
+                    else {
+                        updateLastLocation();
+                        moveCamera(lastKnownLocation);
+                        placeLastKnownMarker();
+
+                        Toast.makeText(getActivity().getApplicationContext(),
+                                "Дана позиція є правильною? Якщо ні - оберіть потрібну позицію довгим натиском на марі", Toast.LENGTH_LONG)
+                                .show();
+                        addWasAsked = true;
+                    }
+                }
             }
         });
     }
-
-//    @Override
-//    public void onMapReady(GoogleMap googleMap) {
-//        map = googleMap;
-//        LatLng pp = new LatLng(11,34);
-//        MarkerOptions options = new MarkerOptions();
-//        options.position(pp).title("qwe");
-//        map.addMarker(options);
-//        map.moveCamera(CameraUpdateFactory.newLatLng(pp));
-//    }
-
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
         map = googleMap;
         map.setOnMapLongClickListener(this);
+        this.fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
-//        if(checkMapServices()) {
-            if(locationPermissionGranted) {
-                initialWorkWithMap();
-            }
-//            else {
-//                getLocationPermission();
-//            }
-//        }
-        recursiveCameraCheck();
+        this.lastKnownLocation = DEFAULT_POSITION;
+        updateLastLocation();
+
+        this.addWasAsked = false;
+
+        if(locationPermissionGranted) {
+            updateLastLocation();
+            initialWorkWithMap();
+        }
+//        recursiveCameraCheck();
     }
 
     private void recursiveCameraCheck() {
@@ -111,11 +237,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             public void run() {
                 if(!cameraIsOnUser) {
                     cameraIsOnUser = true;
-                    getDeviceLocation();
+                    moveToDeviceLocation();
                     recursiveCameraCheck();
                 }
             }
-        }, 2200);
+        }, 1200);
     }
 
     @Override
@@ -125,6 +251,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         if(checkMapServices()) {
             if(locationPermissionGranted) {
                 initialWorkWithMap();
+                updatePosts();
             }
             else {
                 getLocationPermission();
@@ -134,64 +261,67 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
     @Override
     public void onMapLongClick(LatLng point) {
+        if(addWasAsked) {
+            placeLastKnownMarker(point);
+            Toast.makeText(getActivity(), getAddress(getActivity(), point.latitude, point.longitude), Toast.LENGTH_LONG).show();
+        }
+    }
 
-        map.addMarker(new MarkerOptions().position(point).title(
-                point.toString()));
+    public String getAddress(Context context, double lat, double lng) {
+        Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
+            Address obj = addresses.get(0);
 
-        Toast.makeText(getActivity().getApplicationContext(),
-                "New marker added@" + point.toString(), Toast.LENGTH_LONG)
-                .show();
+            String add = obj.getAddressLine(0);
+            add = add + "," + obj.getAdminArea();
+            add = add + "," + obj.getCountryName();
+
+            return add;
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            return null;
+        }
     }
 
     private void initialWorkWithMap() {
         map.setMyLocationEnabled(true);
         map.setBuildingsEnabled(true);
-        getDeviceLocation();
+        moveToDeviceLocation();
     }
 
-    private boolean getDeviceLocation() {
-        /*
-         * Get the best and most recent location of the device, which may be null in rare
-         * cases when a location is not available.
-         */
-        try {
-            if (locationPermissionGranted) {
-                Task locationResult = new FusedLocationProviderClient(getActivity()).getLastLocation();
-                locationResult.addOnCompleteListener(getActivity(), new OnCompleteListener() {
-                    @Override
-                    public void onComplete(@NonNull Task task) {
-                        if (task.isSuccessful()) {
-                            // Set the map's camera position to the current location of the device.
-                            Location mLastKnownLocation = (Location)task.getResult();
-                            if(mLastKnownLocation == null) {
-                                Log.d("MainActivity", "Variable of last location is null");
-                                cameraIsOnUser = false;
-                                moveCamera();
-                                map.getUiSettings().setMyLocationButtonEnabled(false);
-                                return;
-                            }
-                            moveCamera(mLastKnownLocation);
-                            cameraIsOnUser = true;
-                        } else {
-                            Log.d("MainActivity", "Current location is null. Using defaults.");
-                            Log.e("MainActivity", "Exception: %s", task.getException());
-                            moveCamera();
-                        }
-                    }
-                });
-            }
-        } catch(SecurityException e)  {
-            Log.e("MainActivity: %s", e.getMessage());
-        }
+    private void moveToDeviceLocation() {
+        updateLastLocation();
+        moveCamera(this.lastKnownLocation);
+        this.cameraIsOnUser = true;
+    }
 
-        return true;
+    private void updateLastLocation() {
+        fusedLocationClient.getLastLocation()
+            .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    // Got last known location. In some rare situations this can be null.
+                    if (location != null) {
+                        // Logic to handle location object
+                        lastKnownLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                    }
+                }
+            }
+        );
+
     }
 
     private void moveCamera(LatLng position, float zoom) {
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, zoom));
     }
     private void moveCamera(LatLng position) {
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_ZOOM));
+//        map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_ZOOM));
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(position).zoom(DEFAULT_ZOOM).build();
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
+        map.animateCamera(cameraUpdate);
+
     }
     private void moveCamera(Location position) {
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(position.getLatitude(), position.getLongitude()), DEFAULT_ZOOM));
@@ -313,6 +443,19 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                 }
             }
         }
+    }
+
+    public boolean isOnline() {
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+            int     exitValue = ipProcess.waitFor();
+            return (exitValue == 0);
+        }
+        catch (IOException e)          { e.printStackTrace(); }
+        catch (InterruptedException e) { e.printStackTrace(); }
+
+        return false;
     }
 
 }
