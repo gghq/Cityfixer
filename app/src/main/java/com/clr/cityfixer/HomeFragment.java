@@ -1,6 +1,7 @@
 package com.clr.cityfixer;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -47,6 +48,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     private boolean cameraIsOnUser;
     private LatLng lastKnownLocation;
     private FusedLocationProviderClient fusedLocationClient;
+    User loginedUser;
+    DB db = new DB();
 
     CircleButton btnAddPost;
 
@@ -59,6 +62,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         this.cameraIsOnUser = false;
 
         btnAddPost = (CircleButton)v.findViewById(R.id.btnAddPost);
+
         return v;
     }
 
@@ -69,20 +73,30 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                 findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        btnAddPost.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent(getActivity(), AddPostActivity.class);
-                updateLastLocation();
-                Toast.makeText(getActivity().getApplicationContext(),
-                        "New marker added@" + lastKnownLocation.toString(), Toast.LENGTH_LONG)
-                        .show();
-                intent.putExtra("latitude", lastKnownLocation.latitude);
-                intent.putExtra("longitude", lastKnownLocation.longitude);
-                startActivity(intent);
-            }
-        });
+        if(((MainActivity)getActivity()).userEmail != null){
+            btnAddPost.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    db.DownloadUser(new DB.FirebaseCallbackUser() {
+                        @Override
+                        public void CallBack(User user) {
+                            loginedUser = user;
+                            ((MainActivity)getActivity()).loginedUser = user;
+                            Intent intent = new Intent(getActivity(), AddPostActivity.class);
+                            updateLastLocation();
+                            intent.putExtra("latitude", String.valueOf(lastKnownLocation.latitude));
+                            intent.putExtra("longitude", String.valueOf(lastKnownLocation.longitude));
+                            intent.putExtra("username", user.getUserName());
+                            intent.putExtra("email", user.getUserEmail());
+                            startActivity(intent);
+                        }
+                    }, ((MainActivity)getActivity()).userEmail);
+                }
+            });
+        }
+        else{
+            Toast.makeText(getActivity(), "You are not loggined", Toast.LENGTH_LONG);
+        }
     }
 
     @Override

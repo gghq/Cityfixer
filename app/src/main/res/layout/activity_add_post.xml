@@ -6,61 +6,40 @@
     android:layout_height="match_parent"
     tools:context=".AddPostActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
+    <Button
+        android:id="@+id/btnSend"
+        android:layout_width="130dp"
+        android:layout_height="61dp"
+        android:layout_gravity="center"
+        android:text="Send"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/spinnerCategories"
+        app:layout_constraintVertical_bias="0.091" />
 
-        <ImageView
-            android:id="@+id/imgViewPhoto"
-            android:layout_width="500px"
-            android:layout_height="500px"
-            android:layout_gravity="center|top"
-            app:srcCompat="@android:drawable/ic_menu_my_calendar" />
+    <ImageView
+        android:id="@+id/imgViewPhoto"
+        android:layout_width="500px"
+        android:layout_height="500px"
+        android:layout_gravity="center|top"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.245"
+        app:srcCompat="@android:drawable/ic_menu_my_calendar" />
 
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Title" />
+    <Spinner
+        android:id="@+id/spinnerCategories"
+        android:layout_width="209dp"
+        android:layout_height="42dp"
+        android:entries="@array/categories"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgViewPhoto"
+        app:layout_constraintVertical_bias="0.114" />
 
-        <EditText
-            android:id="@+id/editTextTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName" />
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Description" />
-
-        <EditText
-            android:id="@+id/editTextDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:gravity="start|top"
-            android:inputType="textMultiLine" />
-
-        <Spinner
-            android:id="@+id/spinnerCategories"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:entries="@array/categories" />
-
-        <Button
-            android:id="@+id/btnSend"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Send" />
-
-    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -20,7 +20,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ErrorConnection"></activity>
+        <activity android:name=".PostDetailActivity"></activity>
+        <activity android:name=".ErrorConnection" />
         <activity
             android:name=".AddPostActivity"
             android:screenOrientation="portrait" />

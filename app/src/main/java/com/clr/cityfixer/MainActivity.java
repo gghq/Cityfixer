@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +17,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.prefs.Preferences;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,7 +29,9 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Post> postsList;
     ArrayList<String> adminsList;
     ArrayList<User> usersList;
-
+    SharedPreferences preferences;
+    public User loginedUser;
+    String userEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +43,12 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
 
         db = new DB();
+        //preferences = getBaseContext().getSharedPreferences("MODEL_PREFERENCES", Context.MODE_PRIVATE);
+        preferences = getSharedPreferences("MODEL_PREFERENCES", Context.MODE_PRIVATE);
+        if(preferences.getString("currentUser",null) != null)
+        {
+            userEmail = preferences.getString("currentUser",null).split("/")[0];
+        }
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
@@ -52,15 +63,16 @@ public class MainActivity extends AppCompatActivity {
                         db.DownloadPosts(new DB.FirebaseCallbackPosts() {
                             @Override
                             public void CallBack(ArrayList<Post> postList) {
-                                db.DownloadAdmins(new DB.FirebaseCallbackAdmins() {
+                                postsList = postList;
+                                db.DownloadUser(new DB.FirebaseCallbackUser() {
                                     @Override
-                                    public void CallBack(ArrayList<String> admins) {
-                                        adminsList = admins;
+                                    public void CallBack(User user) {
+                                        loginedUser = user;
                                         if(homeFragment  == null)
                                             homeFragment = new HomeFragment();
                                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
                                     }
-                                });
+                                }, userEmail);
                             }
                         });
                         break;
@@ -74,14 +86,17 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void CallBack(ArrayList<Post> postList) {
                                 postsList = postList;
-                                if(listFragment  == null)
-                                    listFragment = new ListFragment();
-                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, listFragment).commit();
+                                db.DownloadAdmins(new DB.FirebaseCallbackAdmins() {
+                                    @Override
+                                    public void CallBack(ArrayList<String> admins) {
+                                        adminsList = admins;
+                                        if(listFragment  == null)
+                                            listFragment = new ListFragment();
+                                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, listFragment).commit();
+                                    }
+                                });
                             }
                         });
-                        if(listFragment  == null)
-                            listFragment = new ListFragment();
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, listFragment).commit();
                         break;
                     case R.id.nav_acc:
                         db.DownloadUsers(new DB.FirebaseCallbackUsers() {
