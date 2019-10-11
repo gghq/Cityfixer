@@ -95,11 +95,16 @@ public class MainActivity extends AppCompatActivity {
                                         loginedUser = user;
                                         if(homeFragment  == null)
                                             homeFragment = new HomeFragment();
-                                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
-                                        if(!isNetworkAvailable())
-                                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, errorListFragment).commit();
+                                        try {
+                                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
+                                            if (!isNetworkAvailable())
+                                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, errorListFragment).commit();
+                                        }catch (Exception e){
+                                            e.getMessage();
+                                        }
                                     }
                                 }, userEmail);
+
                             }
                         });
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, errorListFragment).commit();
