@@ -96,7 +96,7 @@ public class DB {
                 }
                 for(DataSnapshot dS : dataSnapshot.getChildren()){
                     User user = dS.getValue(User.class);
-                    if(user.getUserId().equals(id)){
+                    if(user != null && user.getUserId().equals(id)){
                         firebaseCallback.CallBack(user);
                     }
                 }

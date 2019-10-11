@@ -6,7 +6,7 @@ public class User {
     private String UserName;
     private int UserPoints;
 
-    public User() {
+    public User()
     }
 
     public User(String userId, String userEmail, String userName, int userPoints) {

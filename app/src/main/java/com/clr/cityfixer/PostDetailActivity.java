@@ -19,7 +19,6 @@ public class PostDetailActivity extends AppCompatActivity {
     DB db;
     SharedPreferences preferences;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
