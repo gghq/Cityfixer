@@ -36,6 +36,18 @@
         android:layout_centerHorizontal="true"
         android:visibility="invisible"/>
 
+
+    <Button
+        android:id="@+id/login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="26dp"
+        android:layout_marginRight="26dp"
+        android:layout_below="@+id/logout"
+        android:background="@drawable/round_bg"
+        android:text="Login with google" />
+
     <Button
         android:id="@+id/logout"
         android:layout_width="match_parent"
@@ -48,16 +60,6 @@
         android:text="Logout"
         android:visibility="invisible" />
 
-    <Button
-        android:id="@+id/login"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="26dp"
-        android:layout_marginRight="26dp"
-android:layout_below="@+id/logout"
-        android:background="@drawable/round_bg"
-        android:text="Login with google" />
 
     <ListView
         android:id="@+id/listuser"
